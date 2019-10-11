@@ -102,6 +102,29 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #line 1 ".\\RTE\\_Target_1\\RTE_Components.h"
 
 
@@ -123,13 +146,13 @@
 
 #line 37 ".\\RTE\\_Target_1\\RTE_Components.h"
 
-#line 105 "RTE\\USB\\USBD_Config_0.c"
+#line 128 "RTE\\USB\\USBD_Config_0.c"
 
-#line 118 "RTE\\USB\\USBD_Config_0.c"
+#line 141 "RTE\\USB\\USBD_Config_0.c"
 
-#line 131 "RTE\\USB\\USBD_Config_0.c"
+#line 154 "RTE\\USB\\USBD_Config_0.c"
 
-#line 144 "RTE\\USB\\USBD_Config_0.c"
+#line 167 "RTE\\USB\\USBD_Config_0.c"
 
 #line 1 "RTE\\USB\\USBD_Config_CDC_0.h"
 
@@ -464,10 +487,42 @@
 
 
 
-#line 147 "RTE\\USB\\USBD_Config_0.c"
-#line 157 "RTE\\USB\\USBD_Config_0.c"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #line 170 "RTE\\USB\\USBD_Config_0.c"
+#line 192 "RTE\\USB\\USBD_Config_0.c"
+
+#line 205 "RTE\\USB\\USBD_Config_0.c"
 
 #line 1 "C:\\Keil_v5\\ARM\\PACK\\Keil\\MDK-Middleware\\7.9.0\\USB\\Include\\usbd_config.h"
 
@@ -6648,8 +6703,8 @@ extern
 uint8_t     usbd0_alt_setting  [((0+0+0+0)+(0+0+0+0)+(2 +0 +0 +0 +0 +0 +0 +0)+(0 +0 +0 +0)+(0 +0 +0 +0))];
 uint8_t     usbd0_alt_setting  [((0+0+0+0)+(0+0+0+0)+(2 +0 +0 +0 +0 +0 +0 +0)+(0 +0 +0 +0)+(0 +0 +0 +0))];
 extern 
-uint8_t     usbd0_ep0_buf      [(((8)+31)/32)*32];
-uint8_t     usbd0_ep0_buf      [(((8)+31)/32)*32] __attribute__((aligned(32)));
+uint8_t     usbd0_ep0_buf      [((128+31)/32)*32];
+uint8_t     usbd0_ep0_buf      [((128+31)/32)*32] __attribute__((aligned(32)));
 extern 
 usbd_data_t usbd0_data;
 usbd_data_t usbd0_data;
@@ -6660,15 +6715,15 @@ usbd_dev_t  usbd0_dev      = {
                                         usbd0_alt_setting,
                                         usbd0_ep0_buf,
                                        &usbd0_data,
-                                        0xA0,
+                                        0x80,
                                         0,
                                         ((0+0+0+0)+(0+0+0+0)+(2 +0 +0 +0 +0 +0 +0 +0)+(0 +0 +0 +0)+(0 +0 +0 +0)),
                                         ((0+0+0+0)+(0+0+0+0)+((1+2) +0 +0 +0 +0 +0 +0 +0)+(0 +0 +0 +0)+(0 +0 +0 +0)),
                                         8,
-                                        (16),
-                                        (1),
+                                        16,
+                                        0x01,
                                         0U,
-                                        (8)
+                                        128
                                       };
 
 
@@ -7134,11 +7189,11 @@ void                             *usbd_cdc_bulk_thread_id     [(1 + 0 + 0 + 0 + 
 
 
 extern 
-uint8_t usbd_cdc0_send_buf       [128];
-uint8_t usbd_cdc0_send_buf       [128]           __attribute__((aligned(4)));
+uint8_t usbd_cdc0_send_buf       [1024];
+uint8_t usbd_cdc0_send_buf       [1024]           __attribute__((aligned(4)));
 extern 
-uint8_t usbd_cdc0_receive_buf    [256];
-uint8_t usbd_cdc0_receive_buf    [256]        __attribute__((aligned(4)));
+uint8_t usbd_cdc0_receive_buf    [2048];
+uint8_t usbd_cdc0_receive_buf    [2048]        __attribute__((aligned(4)));
 extern 
 uint8_t usbd_cdc0_notify_buf     [10];
 uint8_t usbd_cdc0_notify_buf     [10]                                    __attribute__((aligned(4)));
@@ -7193,15 +7248,15 @@ usbd_cdc_t      usbd_cdc               [(1 + 0 + 0 + 0 + 0 + 0 + 0 + 0)] = {
                                        &usbd_cdc_data[0],
                                         0,
                                         ((2==2)),
-                                        (((2==2)&&((0U)==255))),
+                                        (((2==2)&&(0==255))),
                                         ((0+0+0+0)+(0+0+0+0)),
                                         (((0+0+0+0)+(0+0+0+0))+1),
                                         1,
                                         2,
                                         2,
 
-                                        128,
-                                        256,
+                                        1024,
+                                        2048,
 
 
 
@@ -8482,11 +8537,11 @@ __attribute__((weak)) const uint8_t usbd0_config_descriptor_fs[] __attribute__((
    
   (sizeof(USB_CONFIGURATION_DESCRIPTOR)),           
   2U,     
-  ((((sizeof(USB_CONFIGURATION_DESCRIPTOR)) + ((0 * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&((0U)==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) * 0 + 0 * (sizeof(USB_INTERFACE_DESCRIPTOR)) + 0 * (sizeof(USB_ENDPOINT_DESCRIPTOR)))) + (0 * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&((0U)==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) * 0 + 0 * (sizeof(USB_INTERFACE_DESCRIPTOR)) + 0 * (sizeof(USB_ENDPOINT_DESCRIPTOR)))) + (0 * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&((0U)==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) * 0 + 0 * (sizeof(USB_INTERFACE_DESCRIPTOR)) + 0 * (sizeof(USB_ENDPOINT_DESCRIPTOR)))) + (0 * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&((0U)==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) * 0 + 0 * (sizeof(USB_INTERFACE_DESCRIPTOR)) + 0 * (sizeof(USB_ENDPOINT_DESCRIPTOR))))) + ((0 * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&((0U)==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) + (sizeof(USB_INTERFACE_DESCRIPTOR)) + (0 || 0) * 0x08+0 + 0 + (0 * (0x0C + 0x07+(0+1)*1 + 0x09 + (sizeof(USB_INTERFACE_DESCRIPTOR)) * 2 + 0x07 + 0x08+(1*3) + 0x09 + 0x07)) + (0 * (0x0C + 0x07+(0+1)*1 + 0x09 + (sizeof(USB_INTERFACE_DESCRIPTOR)) * 2 + 0x07 + 0x08+(1*3) + 0x09 + 0x07)))) + (0 * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&((0U)==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) + (sizeof(USB_INTERFACE_DESCRIPTOR)) + (0 || 0) * 0x08+0 + 0 + (0 * (0x0C + 0x07+(0+1)*1 + 0x09 + (sizeof(USB_INTERFACE_DESCRIPTOR)) * 2 + 0x07 + 0x08+(1*3) + 0x09 + 0x07)) + (0 * (0x0C + 0x07+(0+1)*1 + 0x09 + (sizeof(USB_INTERFACE_DESCRIPTOR)) * 2 + 0x07 + 0x08+(1*3) + 0x09 + 0x07)))) + (0 * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&((0U)==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) + (sizeof(USB_INTERFACE_DESCRIPTOR)) + (0 || 0) * 0x08+0 + 0 + (0 * (0x0C + 0x07+(0+1)*1 + 0x09 + (sizeof(USB_INTERFACE_DESCRIPTOR)) * 2 + 0x07 + 0x08+(1*3) + 0x09 + 0x07)) + (0 * (0x0C + 0x07+(0+1)*1 + 0x09 + (sizeof(USB_INTERFACE_DESCRIPTOR)) * 2 + 0x07 + 0x08+(1*3) + 0x09 + 0x07)))) + (0 * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&((0U)==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) + (sizeof(USB_INTERFACE_DESCRIPTOR)) + (0 || 0) * 0x08+0 + 0 + (0 * (0x0C + 0x07+(0+1)*1 + 0x09 + (sizeof(USB_INTERFACE_DESCRIPTOR)) * 2 + 0x07 + 0x08+(1*3) + 0x09 + 0x07)) + (0 * (0x0C + 0x07+(0+1)*1 + 0x09 + (sizeof(USB_INTERFACE_DESCRIPTOR)) * 2 + 0x07 + 0x08+(1*3) + 0x09 + 0x07))))) + ((((2==2) +0 +0 +0 +0 +0 +0 +0) * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&((0U)==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) + (sizeof(USB_INTERFACE_DESCRIPTOR)) + 19 + (sizeof(USB_ENDPOINT_DESCRIPTOR)) + (sizeof(USB_INTERFACE_DESCRIPTOR)) + 2* (sizeof(USB_ENDPOINT_DESCRIPTOR)))) + (((2==13) +0 +0 +0 +0 +0 +0 +0) * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&((0U)==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) + (sizeof(USB_INTERFACE_DESCRIPTOR)) + 29 + (sizeof(USB_ENDPOINT_DESCRIPTOR)) + 2 * (sizeof(USB_INTERFACE_DESCRIPTOR)) + 2* (sizeof(USB_ENDPOINT_DESCRIPTOR))))) + ((0) + (0) + (0) + (0) ) + ((0+0+0+0) * (sizeof(USB_INTERFACE_DESCRIPTOR)) + (0 +0 +0 +0) * (sizeof(USB_ENDPOINT_DESCRIPTOR))) )) & 0xFF),(((((sizeof(USB_CONFIGURATION_DESCRIPTOR)) + ((0 * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&((0U)==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) * 0 + 0 * (sizeof(USB_INTERFACE_DESCRIPTOR)) + 0 * (sizeof(USB_ENDPOINT_DESCRIPTOR)))) + (0 * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&((0U)==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) * 0 + 0 * (sizeof(USB_INTERFACE_DESCRIPTOR)) + 0 * (sizeof(USB_ENDPOINT_DESCRIPTOR)))) + (0 * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&((0U)==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) * 0 + 0 * (sizeof(USB_INTERFACE_DESCRIPTOR)) + 0 * (sizeof(USB_ENDPOINT_DESCRIPTOR)))) + (0 * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&((0U)==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) * 0 + 0 * (sizeof(USB_INTERFACE_DESCRIPTOR)) + 0 * (sizeof(USB_ENDPOINT_DESCRIPTOR))))) + ((0 * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&((0U)==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) + (sizeof(USB_INTERFACE_DESCRIPTOR)) + (0 || 0) * 0x08+0 + 0 + (0 * (0x0C + 0x07+(0+1)*1 + 0x09 + (sizeof(USB_INTERFACE_DESCRIPTOR)) * 2 + 0x07 + 0x08+(1*3) + 0x09 + 0x07)) + (0 * (0x0C + 0x07+(0+1)*1 + 0x09 + (sizeof(USB_INTERFACE_DESCRIPTOR)) * 2 + 0x07 + 0x08+(1*3) + 0x09 + 0x07)))) + (0 * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&((0U)==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) + (sizeof(USB_INTERFACE_DESCRIPTOR)) + (0 || 0) * 0x08+0 + 0 + (0 * (0x0C + 0x07+(0+1)*1 + 0x09 + (sizeof(USB_INTERFACE_DESCRIPTOR)) * 2 + 0x07 + 0x08+(1*3) + 0x09 + 0x07)) + (0 * (0x0C + 0x07+(0+1)*1 + 0x09 + (sizeof(USB_INTERFACE_DESCRIPTOR)) * 2 + 0x07 + 0x08+(1*3) + 0x09 + 0x07)))) + (0 * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&((0U)==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) + (sizeof(USB_INTERFACE_DESCRIPTOR)) + (0 || 0) * 0x08+0 + 0 + (0 * (0x0C + 0x07+(0+1)*1 + 0x09 + (sizeof(USB_INTERFACE_DESCRIPTOR)) * 2 + 0x07 + 0x08+(1*3) + 0x09 + 0x07)) + (0 * (0x0C + 0x07+(0+1)*1 + 0x09 + (sizeof(USB_INTERFACE_DESCRIPTOR)) * 2 + 0x07 + 0x08+(1*3) + 0x09 + 0x07)))) + (0 * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&((0U)==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) + (sizeof(USB_INTERFACE_DESCRIPTOR)) + (0 || 0) * 0x08+0 + 0 + (0 * (0x0C + 0x07+(0+1)*1 + 0x09 + (sizeof(USB_INTERFACE_DESCRIPTOR)) * 2 + 0x07 + 0x08+(1*3) + 0x09 + 0x07)) + (0 * (0x0C + 0x07+(0+1)*1 + 0x09 + (sizeof(USB_INTERFACE_DESCRIPTOR)) * 2 + 0x07 + 0x08+(1*3) + 0x09 + 0x07))))) + ((((2==2) +0 +0 +0 +0 +0 +0 +0) * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&((0U)==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) + (sizeof(USB_INTERFACE_DESCRIPTOR)) + 19 + (sizeof(USB_ENDPOINT_DESCRIPTOR)) + (sizeof(USB_INTERFACE_DESCRIPTOR)) + 2* (sizeof(USB_ENDPOINT_DESCRIPTOR)))) + (((2==13) +0 +0 +0 +0 +0 +0 +0) * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&((0U)==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) + (sizeof(USB_INTERFACE_DESCRIPTOR)) + 29 + (sizeof(USB_ENDPOINT_DESCRIPTOR)) + 2 * (sizeof(USB_INTERFACE_DESCRIPTOR)) + 2* (sizeof(USB_ENDPOINT_DESCRIPTOR))))) + ((0) + (0) + (0) + (0) ) + ((0+0+0+0) * (sizeof(USB_INTERFACE_DESCRIPTOR)) + (0 +0 +0 +0) * (sizeof(USB_ENDPOINT_DESCRIPTOR))) )) >> 8) & 0xFF),             
+  ((((sizeof(USB_CONFIGURATION_DESCRIPTOR)) + ((0 * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&(0==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) * 0 + 0 * (sizeof(USB_INTERFACE_DESCRIPTOR)) + 0 * (sizeof(USB_ENDPOINT_DESCRIPTOR)))) + (0 * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&(0==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) * 0 + 0 * (sizeof(USB_INTERFACE_DESCRIPTOR)) + 0 * (sizeof(USB_ENDPOINT_DESCRIPTOR)))) + (0 * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&(0==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) * 0 + 0 * (sizeof(USB_INTERFACE_DESCRIPTOR)) + 0 * (sizeof(USB_ENDPOINT_DESCRIPTOR)))) + (0 * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&(0==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) * 0 + 0 * (sizeof(USB_INTERFACE_DESCRIPTOR)) + 0 * (sizeof(USB_ENDPOINT_DESCRIPTOR))))) + ((0 * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&(0==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) + (sizeof(USB_INTERFACE_DESCRIPTOR)) + (0 || 0) * 0x08+0 + 0 + (0 * (0x0C + 0x07+(0+1)*1 + 0x09 + (sizeof(USB_INTERFACE_DESCRIPTOR)) * 2 + 0x07 + 0x08+(1*3) + 0x09 + 0x07)) + (0 * (0x0C + 0x07+(0+1)*1 + 0x09 + (sizeof(USB_INTERFACE_DESCRIPTOR)) * 2 + 0x07 + 0x08+(1*3) + 0x09 + 0x07)))) + (0 * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&(0==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) + (sizeof(USB_INTERFACE_DESCRIPTOR)) + (0 || 0) * 0x08+0 + 0 + (0 * (0x0C + 0x07+(0+1)*1 + 0x09 + (sizeof(USB_INTERFACE_DESCRIPTOR)) * 2 + 0x07 + 0x08+(1*3) + 0x09 + 0x07)) + (0 * (0x0C + 0x07+(0+1)*1 + 0x09 + (sizeof(USB_INTERFACE_DESCRIPTOR)) * 2 + 0x07 + 0x08+(1*3) + 0x09 + 0x07)))) + (0 * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&(0==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) + (sizeof(USB_INTERFACE_DESCRIPTOR)) + (0 || 0) * 0x08+0 + 0 + (0 * (0x0C + 0x07+(0+1)*1 + 0x09 + (sizeof(USB_INTERFACE_DESCRIPTOR)) * 2 + 0x07 + 0x08+(1*3) + 0x09 + 0x07)) + (0 * (0x0C + 0x07+(0+1)*1 + 0x09 + (sizeof(USB_INTERFACE_DESCRIPTOR)) * 2 + 0x07 + 0x08+(1*3) + 0x09 + 0x07)))) + (0 * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&(0==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) + (sizeof(USB_INTERFACE_DESCRIPTOR)) + (0 || 0) * 0x08+0 + 0 + (0 * (0x0C + 0x07+(0+1)*1 + 0x09 + (sizeof(USB_INTERFACE_DESCRIPTOR)) * 2 + 0x07 + 0x08+(1*3) + 0x09 + 0x07)) + (0 * (0x0C + 0x07+(0+1)*1 + 0x09 + (sizeof(USB_INTERFACE_DESCRIPTOR)) * 2 + 0x07 + 0x08+(1*3) + 0x09 + 0x07))))) + ((((2==2) +0 +0 +0 +0 +0 +0 +0) * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&(0==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) + (sizeof(USB_INTERFACE_DESCRIPTOR)) + 19 + (sizeof(USB_ENDPOINT_DESCRIPTOR)) + (sizeof(USB_INTERFACE_DESCRIPTOR)) + 2* (sizeof(USB_ENDPOINT_DESCRIPTOR)))) + (((2==13) +0 +0 +0 +0 +0 +0 +0) * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&(0==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) + (sizeof(USB_INTERFACE_DESCRIPTOR)) + 29 + (sizeof(USB_ENDPOINT_DESCRIPTOR)) + 2 * (sizeof(USB_INTERFACE_DESCRIPTOR)) + 2* (sizeof(USB_ENDPOINT_DESCRIPTOR))))) + ((0) + (0) + (0) + (0) ) + ((0+0+0+0) * (sizeof(USB_INTERFACE_DESCRIPTOR)) + (0 +0 +0 +0) * (sizeof(USB_ENDPOINT_DESCRIPTOR))) )) & 0xFF),(((((sizeof(USB_CONFIGURATION_DESCRIPTOR)) + ((0 * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&(0==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) * 0 + 0 * (sizeof(USB_INTERFACE_DESCRIPTOR)) + 0 * (sizeof(USB_ENDPOINT_DESCRIPTOR)))) + (0 * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&(0==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) * 0 + 0 * (sizeof(USB_INTERFACE_DESCRIPTOR)) + 0 * (sizeof(USB_ENDPOINT_DESCRIPTOR)))) + (0 * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&(0==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) * 0 + 0 * (sizeof(USB_INTERFACE_DESCRIPTOR)) + 0 * (sizeof(USB_ENDPOINT_DESCRIPTOR)))) + (0 * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&(0==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) * 0 + 0 * (sizeof(USB_INTERFACE_DESCRIPTOR)) + 0 * (sizeof(USB_ENDPOINT_DESCRIPTOR))))) + ((0 * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&(0==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) + (sizeof(USB_INTERFACE_DESCRIPTOR)) + (0 || 0) * 0x08+0 + 0 + (0 * (0x0C + 0x07+(0+1)*1 + 0x09 + (sizeof(USB_INTERFACE_DESCRIPTOR)) * 2 + 0x07 + 0x08+(1*3) + 0x09 + 0x07)) + (0 * (0x0C + 0x07+(0+1)*1 + 0x09 + (sizeof(USB_INTERFACE_DESCRIPTOR)) * 2 + 0x07 + 0x08+(1*3) + 0x09 + 0x07)))) + (0 * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&(0==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) + (sizeof(USB_INTERFACE_DESCRIPTOR)) + (0 || 0) * 0x08+0 + 0 + (0 * (0x0C + 0x07+(0+1)*1 + 0x09 + (sizeof(USB_INTERFACE_DESCRIPTOR)) * 2 + 0x07 + 0x08+(1*3) + 0x09 + 0x07)) + (0 * (0x0C + 0x07+(0+1)*1 + 0x09 + (sizeof(USB_INTERFACE_DESCRIPTOR)) * 2 + 0x07 + 0x08+(1*3) + 0x09 + 0x07)))) + (0 * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&(0==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) + (sizeof(USB_INTERFACE_DESCRIPTOR)) + (0 || 0) * 0x08+0 + 0 + (0 * (0x0C + 0x07+(0+1)*1 + 0x09 + (sizeof(USB_INTERFACE_DESCRIPTOR)) * 2 + 0x07 + 0x08+(1*3) + 0x09 + 0x07)) + (0 * (0x0C + 0x07+(0+1)*1 + 0x09 + (sizeof(USB_INTERFACE_DESCRIPTOR)) * 2 + 0x07 + 0x08+(1*3) + 0x09 + 0x07)))) + (0 * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&(0==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) + (sizeof(USB_INTERFACE_DESCRIPTOR)) + (0 || 0) * 0x08+0 + 0 + (0 * (0x0C + 0x07+(0+1)*1 + 0x09 + (sizeof(USB_INTERFACE_DESCRIPTOR)) * 2 + 0x07 + 0x08+(1*3) + 0x09 + 0x07)) + (0 * (0x0C + 0x07+(0+1)*1 + 0x09 + (sizeof(USB_INTERFACE_DESCRIPTOR)) * 2 + 0x07 + 0x08+(1*3) + 0x09 + 0x07))))) + ((((2==2) +0 +0 +0 +0 +0 +0 +0) * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&(0==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) + (sizeof(USB_INTERFACE_DESCRIPTOR)) + 19 + (sizeof(USB_ENDPOINT_DESCRIPTOR)) + (sizeof(USB_INTERFACE_DESCRIPTOR)) + 2* (sizeof(USB_ENDPOINT_DESCRIPTOR)))) + (((2==13) +0 +0 +0 +0 +0 +0 +0) * (((((1 +0 +0 +0 +0 +0 +0 +0)>0)&(((0+0+0+0) + (0+0+0+0) + (0+0+0+0) + (0+0+0+0)) != 0)) | ((1 +0 +0 +0 +0 +0 +0 +0)>1) | ((((((2==2)&&(0==255)))!=0U) || (0!=0U) || (0!=0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U) || (0!= 0U))!=0) | (0!=0) | (0!=0) | (0!=0) | (0!=0) ) * (sizeof(USB_INTERFACE_ASSOCIATION_DESCRIPTOR)) + (sizeof(USB_INTERFACE_DESCRIPTOR)) + 29 + (sizeof(USB_ENDPOINT_DESCRIPTOR)) + 2 * (sizeof(USB_INTERFACE_DESCRIPTOR)) + 2* (sizeof(USB_ENDPOINT_DESCRIPTOR))))) + ((0) + (0) + (0) + (0) ) + ((0+0+0+0) * (sizeof(USB_INTERFACE_DESCRIPTOR)) + (0 +0 +0 +0) * (sizeof(USB_ENDPOINT_DESCRIPTOR))) )) >> 8) & 0xFF),             
   ((0+0+0+0)+(0+0+0+0)+(2 +0 +0 +0 +0 +0 +0 +0)+(0 +0 +0 +0)+(0 +0 +0 +0)),                          
   0x01,                                  
   0x00,                                  
-  0xA0,           
+  0x80,           
   250,              
 
 #line 170 "C:\\Keil_v5\\ARM\\PACK\\Keil\\MDK-Middleware\\7.9.0\\USB\\Include\\usbd_config_desc_0.c"
@@ -8501,7 +8556,7 @@ __attribute__((weak)) const uint8_t usbd0_config_descriptor_fs[] __attribute__((
 #line 662 "C:\\Keil_v5\\ARM\\PACK\\Keil\\MDK-Middleware\\7.9.0\\USB\\Include\\usbd_config_desc_0.c"
 
 #line 672 "C:\\Keil_v5\\ARM\\PACK\\Keil\\MDK-Middleware\\7.9.0\\USB\\Include\\usbd_config_desc_0.c"
-  (sizeof(USB_INTERFACE_DESCRIPTOR)), 4U, ((0+0+0+0)+(0+0+0+0)), 0x00, 0x01, 0x02U, 0x02U, (0U), ((3+1)+(0+0+0+0)+(0+0+0+0)), 0x05, 0x24U, 0x00U, ((0x0110U) & 0xFF),(((0x0110U) >> 8) & 0xFF), 0x05, 0x24U, 0x01U, (0x03U), 0x01, 0x04, 0x24U, 0x02U, (0x06U), 0x05, 0x24U, 0x06U, ((0+0+0+0)+(0+0+0+0)), (((0+0+0+0)+(0+0+0+0))+1),
+  (sizeof(USB_INTERFACE_DESCRIPTOR)), 4U, ((0+0+0+0)+(0+0+0+0)), 0x00, 0x01, 0x02U, 0x02U, 0, ((3+1)+(0+0+0+0)+(0+0+0+0)), 0x05, 0x24U, 0x00U, ((0x0110U) & 0xFF),(((0x0110U) >> 8) & 0xFF), 0x05, 0x24U, 0x01U, 0x03, 0x01, 0x04, 0x24U, 0x02U, 0x06, 0x05, 0x24U, 0x06U, ((0+0+0+0)+(0+0+0+0)), (((0+0+0+0)+(0+0+0+0))+1),
   (sizeof(USB_ENDPOINT_DESCRIPTOR)), 5U, ((1) | 0x80U), 0x03U, ((16) & 0xFF),(((16) >> 8) & 0xFF), 2,
   (sizeof(USB_INTERFACE_DESCRIPTOR)), 4U, (((0+0+0+0)+(0+0+0+0))+1), 0x00, 0x02, 0x0AU, 0x00, 0x00, (((3+1)+(0+0+0+0)+(0+0+0+0))+1),
   (sizeof(USB_ENDPOINT_DESCRIPTOR)), 5U, ( 2 ), 0x02U, ((64) & 0xFF),(((64) >> 8) & 0xFF), 0x00, (sizeof(USB_ENDPOINT_DESCRIPTOR)), 5U, ((2) | 0x80U), 0x02U, ((64) & 0xFF),(((64) >> 8) & 0xFF), 0x00,
@@ -8534,7 +8589,7 @@ typedef const __packed struct {
   uint8_t  type;
   uint16_t langid;
   uint8_t bLen0; uint8_t bType0; wchar_t bStr0[sizeof(L"Keil Software")/2-1];
-  uint8_t bLen1; uint8_t bType1; wchar_t bStr1[sizeof(L"JR Test Device!")/2-1];
+  uint8_t bLen1; uint8_t bType1; wchar_t bStr1[sizeof(L"Keil USB Device 0")/2-1];
 
   uint8_t bLen2; uint8_t bType2; wchar_t bStr2[sizeof(L"0001A0000000")/2-1];
 
@@ -8559,7 +8614,7 @@ extern usbd0_string_descriptor_t usbd0_string_descriptor;
 __attribute__((weak)) usbd0_string_descriptor_t usbd0_string_descriptor __attribute__((aligned(4))) = {
   4, 3U, 0x0409,
   sizeof(L"Keil Software"), 3U, L"Keil Software",
-  sizeof(L"JR Test Device!"), 3U, L"JR Test Device!",
+  sizeof(L"Keil USB Device 0"), 3U, L"Keil USB Device 0",
 
   sizeof(L"0001A0000000"), 3U, L"0001A0000000",
 
@@ -8583,11 +8638,17 @@ __attribute__((weak)) usbd0_string_descriptor_t usbd0_string_descriptor __attrib
 typedef __packed struct {
   uint8_t  bLength;
   uint8_t  bDescriptorType;
-  uint16_t bString[(16)];
+  uint16_t bString[16];
 } usbd0_ser_num_string_descriptor_t;
 
 static usbd0_ser_num_string_descriptor_t usbd0_ser_num_string_descriptor __attribute__((aligned(4)));
 
+
+
+
+static const uint8_t usbd0_ms_os_string_descriptor[18] __attribute__((aligned(4))) = {
+  (sizeof(USB_MS_OS_STRING_DESCRIPTOR)), 3U, 'M', 0, 'S', 0, 'F', 0, 'T', 0, '1', 0, '0', 0, '0', 0, 0x01, 0U
+};
 
 #line 3477 "C:\\Keil_v5\\ARM\\PACK\\Keil\\MDK-Middleware\\7.9.0\\USB\\Include\\usbd_config_desc_0.c"
 
@@ -8607,12 +8668,12 @@ usbd_desc_t usbd0_desc = {
   (const uint8_t *)(&usbd0_string_descriptor),
 
   (uint8_t *)(&usbd0_ser_num_string_descriptor),
-#line 3500 "C:\\Keil_v5\\ARM\\PACK\\Keil\\MDK-Middleware\\7.9.0\\USB\\Include\\usbd_config_desc_0.c"
-  0,
 
 
 
 
+  usbd0_ms_os_string_descriptor,
+#line 3505 "C:\\Keil_v5\\ARM\\PACK\\Keil\\MDK-Middleware\\7.9.0\\USB\\Include\\usbd_config_desc_0.c"
   0,
 
 };
@@ -8672,4 +8733,4 @@ usbd_desc_t *usbd_desc_ptr [(1 + 0 + 0 + 0)]  = {
 
 
 
-#line 172 "RTE\\USB\\USBD_Config_0.c"
+#line 207 "RTE\\USB\\USBD_Config_0.c"

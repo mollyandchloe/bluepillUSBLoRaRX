@@ -24350,6 +24350,8 @@ N		*/
 N		
 N		
 N	return(1);
+W "Radio.c" 80 21 variable "version"  was set but never used
+W "Radio.c" 81 23 variable "drv_capabilities"  was set but never used
 N}
 N
 N
@@ -24409,11 +24411,13 @@ N			SPIdrv->Send(data, num);
 N			while(SPIdrv->GetStatus().busy == 1); // Wait for data to be sent.
 N			SPIdrv->Control(ARM_SPI_CONTROL_SS, ARM_SPI_SS_INACTIVE);
 X			SPIdrv->Control((0x13UL << 0), 0);
+W "Radio.c" 319 1 missing return statement at end of non-void function "SendToRadio" 
 N}
 N
 Nint32_t RadioSendByte(uint8_t Byte, uint8_t Address){
 N		uint8_t thedata[2]={Byte, Address};
 N		SendToRadio(thedata, 2);
+W "Radio.c" 324 1 missing return statement at end of non-void function "RadioSendByte" 
 N}
 N
 N
