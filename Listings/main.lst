@@ -22924,30 +22924,7 @@ N#endif
 N
 N#endif /* DRIVER_SPI_H_ */
 L 6 "main.c" 2
-N#include "Radio.h"	                    //Radio Functions
-L 1 "Radio.h" 1
-N/** @file radio.h
-N * 
-N * @brief Header for Radio.c
-N *
-N * @par       
-N * 
-N */ 
-N
-N#ifndef RADIO_H
-N#define RADIO_H
-N
-N#include "stm32f10x.h"                  // Device header
-N#include <stdint.h>
-N#include "Driver_SPI.h"
-N#include "GPIO_STM32F10x.h"
-N#include "cmsis_os.h"                   // ARM::CMSIS:RTOS:Keil RTX
-N
-Nuint32_t initialiseRadio( void );
-N
-N
-N#endif /* RADIO_H */
-L 7 "main.c" 2
+N//#include "Radio.h"	                    //Radio Functions
 N#include "rl_usb.h"
 L 1 "C:\Keil_v5\ARM\PACK\Keil\MDK-Middleware\7.9.0\USB\Include\rl_usb.h" 1
 N/*------------------------------------------------------------------------------
@@ -28325,7 +28302,7 @@ N	//USBD_PowerControl 			(ARM_POWER_FULL);
 N	
 N  USBD_Connect            (0U);         // USB Device 0 Connect
 N	
-N	initialiseRadio();                          /* Set up the RFM95 */
+N	// initialiseRadio();                //Old radio function!
 N
 N	
 N	

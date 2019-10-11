@@ -322,7 +322,7 @@
             <wLevel>2</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
-            <uC99>1</uC99>
+            <uC99>0</uC99>
             <useXO>0</useXO>
             <v6Lang>1</v6Lang>
             <v6LangP>1</v6LangP>
@@ -398,6 +398,16 @@
               <FileName>USBD_User_CDC_ACM_0.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\USBD_User_CDC_ACM_0.c</FilePath>
+            </File>
+            <File>
+              <FileName>RH_RF95.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\RH_RF95.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>RHSPIDriver.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\RHSPIDriver.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -574,7 +584,7 @@
           <targetInfo name="Target 1"/>
         </targetInfos>
       </file>
-      <file attr="config" category="source" name="USB\Config\USBD_Config.c" version="5.0.0">
+      <file attr="config" category="source" name="USB\Config\USBD_Config.c" version="5.2.0">
         <instance index="0">RTE\USB\USBD_Config_0.c</instance>
         <component Cbundle="MDK-Pro" Cclass="USB" Cgroup="Device" Cvendor="Keil" Cversion="6.13.6" condition="USB Core, Device Instance and Device Driver" maxInstances="4"/>
         <package name="MDK-Middleware" schemaVersion="1.4" url="http://www.keil.com/pack/" vendor="Keil" version="7.9.0"/>
@@ -582,7 +592,7 @@
           <targetInfo name="Target 1"/>
         </targetInfos>
       </file>
-      <file attr="config" category="source" name="USB\Config\USBD_Config_CDC.h" version="5.1.2">
+      <file attr="config" category="source" name="USB\Config\USBD_Config_CDC.h" version="5.2.0">
         <instance index="0">RTE\USB\USBD_Config_CDC_0.h</instance>
         <component Cbundle="MDK-Pro" Cclass="USB" Cgroup="Device" Csub="CDC" Cvendor="Keil" Cversion="6.13.6" condition="USB Core, Device Instance and Device Driver" maxInstances="8"/>
         <package name="MDK-Middleware" schemaVersion="1.4" url="http://www.keil.com/pack/" vendor="Keil" version="7.9.0"/>

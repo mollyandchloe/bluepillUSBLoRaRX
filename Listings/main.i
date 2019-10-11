@@ -9165,28 +9165,7 @@ typedef struct _ARM_DRIVER_SPI {
 
 
 #line 6 "main.c"
-#line 1 "Radio.h"
 
-
-
-
-
-
-  
-
-
-
-
-#line 13 "Radio.h"
-#line 14 "Radio.h"
-#line 15 "Radio.h"
-#line 16 "Radio.h"
-#line 17 "Radio.h"
-
-uint32_t initialiseRadio( void );
-
-
-#line 7 "main.c"
 #line 1 "C:\\Keil_v5\\ARM\\PACK\\Keil\\MDK-Middleware\\7.9.0\\USB\\Include\\rl_usb.h"
 
 
@@ -12965,7 +12944,7 @@ int main (void) {
 	
   USBD_Connect            (0U);         
 	
-	initialiseRadio();                           
+	
 
 	
 	

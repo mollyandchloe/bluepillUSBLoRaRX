@@ -19,7 +19,7 @@
 ;;;24       //Set up the GPIO for the LED  PORT C PIN 13  /* Initialize LED GPIO                */
 ;;;25         GPIO_PortClock   (GPIOC, true);
 00000e  2101              MOVS     r1,#1
-000010  4817              LDR      r0,|L1.112|
+000010  4816              LDR      r0,|L1.108|
 000012  f7fffffe          BL       GPIO_PortClock
 ;;;26         GPIO_PinWrite    (GPIOC, 13, 0);
 000016  200d              MOVS     r0,#0xd
@@ -27,14 +27,14 @@
 00001a  b121              CBZ      r1,|L1.38|
 00001c  2201              MOVS     r2,#1
 00001e  4082              LSLS     r2,r2,r0
-000020  4b13              LDR      r3,|L1.112|
+000020  4b12              LDR      r3,|L1.108|
 000022  611a              STR      r2,[r3,#0x10]
 000024  e005              B        |L1.50|
                   |L1.38|
 000026  f1000210          ADD      r2,r0,#0x10
 00002a  2301              MOVS     r3,#1
 00002c  4093              LSLS     r3,r3,r2
-00002e  4a10              LDR      r2,|L1.112|
+00002e  4a0f              LDR      r2,|L1.108|
 000030  6113              STR      r3,[r2,#0x10]
                   |L1.50|
 000032  bf00              NOP      
@@ -42,7 +42,7 @@
 000034  2302              MOVS     r3,#2
 000036  2200              MOVS     r2,#0
 000038  210d              MOVS     r1,#0xd
-00003a  480d              LDR      r0,|L1.112|
+00003a  480c              LDR      r0,|L1.108|
 00003c  f7fffffe          BL       GPIO_PinConfigure
 ;;;28                           GPIO_OUT_PUSH_PULL,
 ;;;29                           GPIO_MODE_OUT2MHZ);
@@ -67,35 +67,34 @@
 000050  2000              MOVS     r0,#0
 000052  f7fffffe          BL       USBD_Connect
 ;;;41     	
-;;;42     	initialiseRadio();                          /* Set up the RFM95 */
-000056  f7fffffe          BL       initialiseRadio
+;;;42     	// initialiseRadio();                //Old radio function!
 ;;;43     
 ;;;44     	
 ;;;45     	
 ;;;46         while (1) {
-00005a  e008              B        |L1.110|
-                  |L1.92|
+000056  e008              B        |L1.106|
+                  |L1.88|
 ;;;47             //while (Buttons_GetState() & 4U);      /* Wait while holding USER button */
 ;;;48             osSignalSet(tid_Thread_LED, 1U);        /* Signal LED thread              */
-00005c  2101              MOVS     r1,#1
-00005e  4805              LDR      r0,|L1.116|
-000060  6800              LDR      r0,[r0,#0]  ; tid_Thread_LED
-000062  f7fffffe          BL       osSignalSet
+000058  2101              MOVS     r1,#1
+00005a  4805              LDR      r0,|L1.112|
+00005c  6800              LDR      r0,[r0,#0]  ; tid_Thread_LED
+00005e  f7fffffe          BL       osSignalSet
 ;;;49             osDelay(delay_val);                     /* Wait                           */
-000066  4804              LDR      r0,|L1.120|
-000068  6800              LDR      r0,[r0,#0]  ; delay_val
-00006a  f7fffffe          BL       osDelay
-                  |L1.110|
-00006e  e7f5              B        |L1.92|
+000062  4804              LDR      r0,|L1.116|
+000064  6800              LDR      r0,[r0,#0]  ; delay_val
+000066  f7fffffe          BL       osDelay
+                  |L1.106|
+00006a  e7f5              B        |L1.88|
 ;;;50     	}
 ;;;51     }
                           ENDP
 
-                  |L1.112|
+                  |L1.108|
                           DCD      0x40011000
-                  |L1.116|
+                  |L1.112|
                           DCD      tid_Thread_LED
-                  |L1.120|
+                  |L1.116|
                           DCD      delay_val
 
                           AREA ||.data||, DATA, ALIGN=2

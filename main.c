@@ -3,7 +3,7 @@
 #include "RTE_Components.h"             // Component selection
 #include "GPIO_STM32F10x.h"
 #include "Driver_SPI.h"
-#include "Radio.h"	                    //Radio Functions
+//#include "Radio.h"	                    //Radio Functions
 #include "rl_usb.h"
 #include <stdio.h>
 
@@ -39,7 +39,7 @@ int main (void) {
 	
   USBD_Connect            (0U);         // USB Device 0 Connect
 	
-	initialiseRadio();                          /* Set up the RFM95 */
+	// initialiseRadio();                //Old radio function!
 
 	
 	

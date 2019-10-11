@@ -7965,7 +7965,6 @@ N  // Add code for handling new data reception
 N	//printf("USB ACM Data Received:%d", len);
 N
 N	char datain[8]= { 0 };
-W "USBD_User_CDC_ACM_0.c" 124 28 argument of type "char *" is incompatible with parameter of type "uint8_t *"
 N	USBD_CDC_ACM_ReadData( 0, datain, len );
 N	printf( "USB ACM Data Received(%d):%s", len, datain );
 N

@@ -19,3 +19,5 @@
 .\objects\radio.o: C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\RTE_Driver\GPIO_STM32F10x.h
 .\objects\radio.o: C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.6.0\CMSIS\RTOS\RTX\INC\cmsis_os.h
 .\objects\radio.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\radio.o: RH_RF95.h
+.\objects\radio.o: RHSPIDriver.h
