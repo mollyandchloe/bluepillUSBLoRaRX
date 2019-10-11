@@ -45,7 +45,7 @@
 //   <o> High-speed Internal Clock <1-999999999>
 #define RTE_HSI                         8000000
 //   <o> High-speed External Clock <1-999999999>
-#define RTE_HSE                         25000000
+#define RTE_HSE                         8000000
 //   <o> System Clock <1-999999999>
 #define RTE_SYSCLK                      72000000
 //   <o> HCLK Clock   <1-999999999>
@@ -895,7 +895,7 @@
 
 // <e> SPI1 (Serial Peripheral Interface 1) [Driver_SPI1]
 // <i> Configuration settings for Driver_SPI1 in component ::CMSIS Driver:SPI
-#define RTE_SPI1                        0
+#define RTE_SPI1                        1
 
 //   <e> SPI1_NSS Pin
 //   <i> Configure Pin if exists
@@ -920,7 +920,7 @@
 #endif
 
 //   <o> SPI1_MISO Pin <0=>Not Used <1=>PA6
-#define RTE_SPI1_MISO_PORT_ID_DEF       0
+#define RTE_SPI1_MISO_PORT_ID_DEF       1
 #if    (RTE_SPI1_MISO_PORT_ID_DEF == 0)
 #define RTE_SPI1_MISO_DEF               0
 #elif   (RTE_SPI1_MISO_PORT_ID_DEF == 1)
@@ -932,7 +932,7 @@
 #endif
 
 //   <o> SPI1_MOSI Pin <0=>Not Used <1=>PA7
-#define RTE_SPI1_MOSI_PORT_ID_DEF       0
+#define RTE_SPI1_MOSI_PORT_ID_DEF       1
 #if    (RTE_SPI1_MOSI_PORT_ID_DEF == 0)
 #define RTE_SPI1_MOSI_DEF               0
 #elif  (RTE_SPI1_MOSI_PORT_ID_DEF == 1)
@@ -1760,7 +1760,7 @@
 
 // <e> USB Device Full-speed
 // <i> Configuration settings for Driver_USBD0 in component ::Drivers:USB Device
-#define RTE_USB_DEVICE                  0
+#define RTE_USB_DEVICE                  1
 
 //     <e> CON On/Off Pin
 //     <i> Configure Pin for driving D+ pull-up
@@ -1773,7 +1773,7 @@
 //       <o3> Bit <0-15>
 //       <i>  Selects Port Bit
 //     </e>
-#define RTE_USB_DEVICE_CON_PIN          1
+#define RTE_USB_DEVICE_CON_PIN          0
 #define RTE_USB_DEVICE_CON_ACTIVE       0
 #define RTE_USB_DEVICE_CON_PORT         GPIO_PORT(1)
 #define RTE_USB_DEVICE_CON_BIT          14

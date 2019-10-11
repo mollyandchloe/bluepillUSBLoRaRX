@@ -10137,3 +10137,1052 @@ typedef struct _ARM_DRIVER_SPI {
 
 #line 42 "C:\\Keil_v5\\ARM\\PACK\\Keil\\STM32F1xx_DFP\\2.3.0\\RTE_Driver\\SPI_STM32F10x.h"
 
+#line 51 "C:\\Keil_v5\\ARM\\PACK\\Keil\\STM32F1xx_DFP\\2.3.0\\RTE_Driver\\SPI_STM32F10x.h"
+
+
+
+
+
+#line 72 "C:\\Keil_v5\\ARM\\PACK\\Keil\\STM32F1xx_DFP\\2.3.0\\RTE_Driver\\SPI_STM32F10x.h"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#line 150 "C:\\Keil_v5\\ARM\\PACK\\Keil\\STM32F1xx_DFP\\2.3.0\\RTE_Driver\\SPI_STM32F10x.h"
+
+
+#line 211 "C:\\Keil_v5\\ARM\\PACK\\Keil\\STM32F1xx_DFP\\2.3.0\\RTE_Driver\\SPI_STM32F10x.h"
+
+
+#line 223 "C:\\Keil_v5\\ARM\\PACK\\Keil\\STM32F1xx_DFP\\2.3.0\\RTE_Driver\\SPI_STM32F10x.h"
+
+#line 234 "C:\\Keil_v5\\ARM\\PACK\\Keil\\STM32F1xx_DFP\\2.3.0\\RTE_Driver\\SPI_STM32F10x.h"
+
+#line 245 "C:\\Keil_v5\\ARM\\PACK\\Keil\\STM32F1xx_DFP\\2.3.0\\RTE_Driver\\SPI_STM32F10x.h"
+
+
+#line 260 "C:\\Keil_v5\\ARM\\PACK\\Keil\\STM32F1xx_DFP\\2.3.0\\RTE_Driver\\SPI_STM32F10x.h"
+
+
+
+
+
+
+
+
+
+
+
+typedef struct _SPI_DMA {
+  DMA_Channel_TypeDef *instance;        
+  uint8_t              dma_num;         
+  uint8_t              ch_num;          
+  uint8_t              priority;        
+} SPI_DMA;
+
+
+typedef const struct _SPI_PIN {
+  GPIO_TypeDef         *port;           
+  uint32_t              pin;            
+} SPI_PIN;
+
+
+typedef const struct _SPI_IO {
+  SPI_PIN              *mosi;           
+  SPI_PIN              *miso;           
+  SPI_PIN              *nss;            
+  SPI_PIN              *sck;            
+  AFIO_REMAP            afio_def;       
+  AFIO_REMAP            afio;           
+} SPI_IO;
+
+typedef struct _SPI_STATUS {
+  uint8_t busy;                         
+  uint8_t data_lost;                    
+  uint8_t mode_fault;                   
+} SPI_STATUS;
+
+
+typedef struct _SPI_INFO {
+  ARM_SPI_SignalEvent_t cb_event;       
+  SPI_STATUS            status;         
+  uint8_t               state;          
+  uint32_t              mode;           
+} SPI_INFO;
+
+
+typedef struct _SPI_TRANSFER_INFO {
+  uint32_t              num;            
+  uint8_t              *rx_buf;         
+  uint8_t              *tx_buf;         
+  uint32_t              rx_cnt;         
+  uint32_t              tx_cnt;         
+  uint32_t              dump_val;       
+  uint16_t              def_val;        
+} SPI_TRANSFER_INFO;
+
+
+
+typedef struct {
+  SPI_TypeDef          *reg;            
+  uint32_t              pclk;           
+  SPI_IO                io;             
+  IRQn_Type             irq_num;        
+  SPI_DMA              *rx_dma;         
+  SPI_DMA              *tx_dma;         
+  SPI_INFO             *info;           
+  SPI_TRANSFER_INFO    *xfer;           
+} SPI_RESOURCES;
+
+#line 59 "C:\\Keil_v5\\ARM\\PACK\\Keil\\STM32F1xx_DFP\\2.3.0\\RTE_Driver\\SPI_STM32F10x.c"
+
+
+
+
+static const ARM_DRIVER_VERSION DriverVersion = { (((2) << 8) | (2)), (((2) << 8) | (2)) };
+
+
+static const ARM_SPI_CAPABILITIES DriverCapabilities = {
+  0,   
+  0,   
+  0,   
+  1    
+};
+
+
+
+
+
+static SPI_INFO          SPI1_Info         = { 0U };
+static SPI_TRANSFER_INFO SPI1_TransferInfo = { 0U };
+
+
+  static SPI_PIN SPI1_mosi = {((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x10000) + 0x0800)), 7};
+
+
+  static SPI_PIN SPI1_miso = {((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x10000) + 0x0800)), 6};
+
+
+  static SPI_PIN SPI1_nss  = {((0 == 0) ? ((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x10000) + 0x0800)) : (0 == 1) ? ((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x10000) + 0x0C00)) : (0 == 2) ? ((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x10000) + 0x1000)) : (0 == 3) ? ((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x10000) + 0x1400)) : (0 == 4) ? ((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x10000) + 0x1800)) : (0 == 5) ? ((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x10000) + 0x1C00)) : (0 == 6) ? ((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x10000) + 0x2000)) : 0),  4};
+
+  static SPI_PIN SPI1_sck  = {((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x10000) + 0x0800)),  5};
+
+
+#line 100 "C:\\Keil_v5\\ARM\\PACK\\Keil\\STM32F1xx_DFP\\2.3.0\\RTE_Driver\\SPI_STM32F10x.c"
+
+#line 109 "C:\\Keil_v5\\ARM\\PACK\\Keil\\STM32F1xx_DFP\\2.3.0\\RTE_Driver\\SPI_STM32F10x.c"
+
+
+static const SPI_RESOURCES SPI1_Resources = {
+  ((SPI_TypeDef *) ((((uint32_t)0x40000000) + 0x10000) + 0x3000)),
+  72000000,
+  
+  {
+
+    &SPI1_mosi,
+
+
+
+
+    &SPI1_miso,
+
+
+
+
+    &SPI1_nss,
+
+
+
+    &SPI1_sck,
+    AFIO_SPI1_NO_REMAP,
+    AFIO_SPI1_NO_REMAP
+  },
+
+  SPI1_IRQn,
+
+
+
+
+  0,
+
+
+
+
+
+  0,
+
+
+  &SPI1_Info,
+  &SPI1_TransferInfo
+};
+
+
+#line 234 "C:\\Keil_v5\\ARM\\PACK\\Keil\\STM32F1xx_DFP\\2.3.0\\RTE_Driver\\SPI_STM32F10x.c"
+
+#line 314 "C:\\Keil_v5\\ARM\\PACK\\Keil\\STM32F1xx_DFP\\2.3.0\\RTE_Driver\\SPI_STM32F10x.c"
+
+
+
+
+
+ 
+static void SPI_PeripheralReset (const SPI_TypeDef *spi) {
+
+  if (spi == ((SPI_TypeDef *) ((((uint32_t)0x40000000) + 0x10000) + 0x3000))) { ((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x20000) + 0x1000))->APB2RSTR |= ((uint32_t)0x00001000); }
+
+  if (spi == ((SPI_TypeDef *) (((uint32_t)0x40000000) + 0x3800))) { ((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x20000) + 0x1000))->APB1RSTR |= ((uint32_t)0x00004000); }
+
+
+
+
+
+  __nop(); __nop(); __nop(); __nop();
+
+  if (spi == ((SPI_TypeDef *) ((((uint32_t)0x40000000) + 0x10000) + 0x3000))) { ((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x20000) + 0x1000))->APB2RSTR &= ~((uint32_t)0x00001000); }
+
+  if (spi == ((SPI_TypeDef *) (((uint32_t)0x40000000) + 0x3800))) { ((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x20000) + 0x1000))->APB1RSTR &= ~((uint32_t)0x00004000); }
+
+
+
+
+}
+
+
+
+
+
+ 
+static ARM_DRIVER_VERSION SPIX_GetVersion (void) {
+  return DriverVersion;
+}
+
+
+
+
+
+
+ 
+static ARM_SPI_CAPABILITIES SPIX_GetCapabilities (void) {
+  return DriverCapabilities;
+}
+
+
+
+
+
+
+
+
+ 
+static int32_t SPI_Initialize (ARM_SPI_SignalEvent_t cb_event, const SPI_RESOURCES *spi) {
+  _Bool ok = 1;
+
+  if (spi->info->state & ((uint8_t)(1U))) { return 0; }
+
+  
+  spi->info->cb_event = cb_event;
+  spi->info->status.busy       = 0U;
+  spi->info->status.data_lost  = 0U;
+  spi->info->status.mode_fault = 0U;
+
+  
+  memset(spi->xfer, 0, sizeof(SPI_TRANSFER_INFO));
+
+  
+  GPIO_AFConfigure(spi->io.afio);
+
+  
+  GPIO_PortClock (spi->io.sck->port, 1);
+  ok = GPIO_PinConfigure(spi->io.sck->port, spi->io.sck->pin, GPIO_AF_PUSHPULL,
+                                                              GPIO_MODE_OUT50MHZ);
+  if (ok && (spi->io.mosi != 0)) {
+    
+    GPIO_PortClock (spi->io.mosi->port, 1);
+    ok = GPIO_PinConfigure(spi->io.mosi->port, spi->io.mosi->pin, GPIO_AF_PUSHPULL,
+                                                                  GPIO_MODE_OUT50MHZ);
+  }
+  if (ok && (spi->io.miso != 0)) {
+    
+    GPIO_PortClock (spi->io.miso->port, 1);
+    ok = GPIO_PinConfigure(spi->io.miso->port, spi->io.miso->pin, GPIO_AF_PUSHPULL,
+                                                                  GPIO_MODE_INPUT);
+  }
+
+#line 412 "C:\\Keil_v5\\ARM\\PACK\\Keil\\STM32F1xx_DFP\\2.3.0\\RTE_Driver\\SPI_STM32F10x.c"
+
+  spi->info->state = ((uint8_t)(1U));
+
+  return (ok) ? (0) : (-1);
+}
+
+
+
+
+
+
+ 
+static int32_t SPI_Uninitialize (const SPI_RESOURCES *spi) {
+
+  
+  GPIO_PinConfigure (spi->io.sck->port, spi->io.sck->pin, GPIO_IN_ANALOG, GPIO_MODE_INPUT);
+
+  if (spi->io.miso != 0) {
+    GPIO_PinConfigure (spi->io.miso->port, spi->io.miso->pin, GPIO_IN_ANALOG, GPIO_MODE_INPUT);
+  }
+  if (spi->io.mosi != 0) {
+    GPIO_PinConfigure (spi->io.mosi->port, spi->io.mosi->pin, GPIO_IN_ANALOG, GPIO_MODE_INPUT);
+  }
+  if (spi->io.nss != 0) {
+    GPIO_PinConfigure (spi->io.nss->port, spi->io.nss->pin, GPIO_IN_ANALOG, GPIO_MODE_INPUT);
+  }
+
+  
+  GPIO_AFConfigure(spi->io.afio_def);
+
+#line 452 "C:\\Keil_v5\\ARM\\PACK\\Keil\\STM32F1xx_DFP\\2.3.0\\RTE_Driver\\SPI_STM32F10x.c"
+
+  
+  spi->info->state = 0U;
+
+  return 0;
+}
+
+
+
+
+
+
+
+ 
+static int32_t SPI_PowerControl (ARM_POWER_STATE state, const SPI_RESOURCES *spi) {
+
+  switch (state) {
+    case ARM_POWER_OFF:
+      
+      SPI_PeripheralReset (spi->reg);
+
+      __NVIC_DisableIRQ (spi->irq_num);
+
+      
+      if (spi->reg == ((SPI_TypeDef *) ((((uint32_t)0x40000000) + 0x10000) + 0x3000))) { ((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x20000) + 0x1000))->APB2ENR &= ~((uint32_t)0x00001000); }
+
+      if (spi->reg == ((SPI_TypeDef *) (((uint32_t)0x40000000) + 0x3800))) { ((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x20000) + 0x1000))->APB1ENR &= ~((uint32_t)0x00004000); }
+
+
+
+
+
+      
+      spi->info->status.busy       = 0U;
+      spi->info->status.data_lost  = 0U;
+      spi->info->status.mode_fault = 0U;
+
+      
+      spi->info->state &= ~((uint8_t)(1U << 1));
+      break;
+
+    case ARM_POWER_FULL:
+      if ((spi->info->state & ((uint8_t)(1U))) == 0U) {
+        return -1;
+      }
+      if ((spi->info->state & ((uint8_t)(1U << 1)))     != 0U) {
+        return 0;
+      }
+
+      
+      spi->info->status.busy       = 0U;
+      spi->info->status.data_lost  = 0U;
+      spi->info->status.mode_fault = 0U;
+
+      spi->xfer->def_val           = 0U;
+
+      
+      spi->info->state |= ((uint8_t)(1U << 1));
+
+      
+      if (spi->reg == ((SPI_TypeDef *) ((((uint32_t)0x40000000) + 0x10000) + 0x3000))) { ((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x20000) + 0x1000))->APB2ENR |= ((uint32_t)0x00001000); }
+
+      if (spi->reg == ((SPI_TypeDef *) (((uint32_t)0x40000000) + 0x3800))) { ((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x20000) + 0x1000))->APB1ENR |= ((uint32_t)0x00004000); }
+
+
+
+
+
+      
+      SPI_PeripheralReset (spi->reg);
+
+      
+      __NVIC_ClearPendingIRQ(spi->irq_num);
+      __NVIC_EnableIRQ(spi->irq_num);
+      break;
+
+    case ARM_POWER_LOW:
+    default: return -4;
+  }
+  return 0;
+}
+
+
+
+
+
+
+
+
+ 
+static int32_t SPI_Send (const void *data, uint32_t num, const SPI_RESOURCES *spi) {
+
+
+
+
+  if ((data == 0) || (num == 0U))             { return -5; }
+  if ((spi->info->state & ((uint8_t)(1U << 2))) == 0U) { return -1; }
+  if ( spi->info->status.busy)                   { return -2; }
+
+  
+  if ((((spi->io.mosi != 0) && ((spi->info->mode & (0xFFUL << 0)) == (0x01UL << 0))) ||
+       ((spi->io.miso != 0) && ((spi->info->mode & (0xFFUL << 0)) == (0x02UL << 0) ))) == 0U) {
+    return -1;
+  }
+
+  
+  spi->info->status.busy       = 1U;
+  spi->info->status.data_lost  = 0U;
+  spi->info->status.mode_fault = 0U;
+
+  
+  spi->xfer->rx_buf = 0;
+  spi->xfer->tx_buf = (uint8_t *)data;
+  spi->xfer->num    = num;
+  spi->xfer->rx_cnt = 0U;
+  spi->xfer->tx_cnt = 0U;
+
+#line 595 "C:\\Keil_v5\\ARM\\PACK\\Keil\\STM32F1xx_DFP\\2.3.0\\RTE_Driver\\SPI_STM32F10x.c"
+  {
+    
+    
+    spi->reg->CR2 |= ((uint8_t)0x40);
+  }
+
+#line 627 "C:\\Keil_v5\\ARM\\PACK\\Keil\\STM32F1xx_DFP\\2.3.0\\RTE_Driver\\SPI_STM32F10x.c"
+  {
+    
+    
+    spi->reg->CR2 |= ((uint8_t)0x80);
+  }
+  return 0;
+}
+
+
+
+
+
+
+
+
+ 
+static int32_t SPI_Receive (void *data, uint32_t num, const SPI_RESOURCES *spi) {
+
+
+
+
+  if ((data == 0) || (num == 0U))             { return -5; }
+  if ((spi->info->state & ((uint8_t)(1U << 2))) == 0U) { return -1; }
+  if ( spi->info->status.busy)                   { return -2; }
+
+  
+  if ((((spi->io.miso != 0) && ((spi->info->mode & (0xFFUL << 0)) == (0x01UL << 0))) ||
+       ((spi->io.mosi != 0) && ((spi->info->mode & (0xFFUL << 0)) == (0x02UL << 0) ))) == 0U) {
+    return -1;
+  }
+
+  
+  spi->info->status.busy       = 1U;
+  spi->info->status.data_lost  = 0U;
+  spi->info->status.mode_fault = 0U;
+
+  
+  spi->xfer->rx_buf = (uint8_t *)data;
+  spi->xfer->tx_buf = 0;
+  spi->xfer->num    = num;
+  spi->xfer->rx_cnt = 0U;
+  spi->xfer->tx_cnt = 0U;
+
+#line 697 "C:\\Keil_v5\\ARM\\PACK\\Keil\\STM32F1xx_DFP\\2.3.0\\RTE_Driver\\SPI_STM32F10x.c"
+  {
+    
+    
+    spi->reg->CR2 |= ((uint8_t)0x40);
+  }
+
+#line 729 "C:\\Keil_v5\\ARM\\PACK\\Keil\\STM32F1xx_DFP\\2.3.0\\RTE_Driver\\SPI_STM32F10x.c"
+  {
+    
+    
+    spi->reg->CR2 |= ((uint8_t)0x80);
+  }
+
+  return 0;
+}
+
+
+
+
+
+
+
+
+
+ 
+static int32_t SPI_Transfer (const void *data_out, void *data_in, uint32_t num, const SPI_RESOURCES *spi) {
+
+
+
+
+  if ((data_out == 0) || (data_in == 0) || (num == 0U)) { return -5; }
+  if ((spi->info->state & ((uint8_t)(1U << 2))) == 0U)              { return -1; }
+  if ( spi->info->status.busy)                                { return -2; }
+
+  
+  if ((spi->io.miso == 0) || (spi->io.mosi == 0)) {
+    return -1;
+  }
+
+  
+  spi->info->status.busy       = 1U;
+  spi->info->status.data_lost  = 0U;
+  spi->info->status.mode_fault = 0U;
+
+  
+  spi->xfer->rx_buf = (uint8_t *)data_in;
+  spi->xfer->tx_buf = (uint8_t *)data_out;
+  spi->xfer->num    = num;
+  spi->xfer->rx_cnt = 0U;
+  spi->xfer->tx_cnt = 0U;
+
+#line 820 "C:\\Keil_v5\\ARM\\PACK\\Keil\\STM32F1xx_DFP\\2.3.0\\RTE_Driver\\SPI_STM32F10x.c"
+  {
+    
+    
+    spi->reg->CR2 |= ((uint8_t)0x40) | ((uint8_t)0x80);
+  }
+
+  return 0;
+}
+
+
+
+
+
+
+ 
+static uint32_t SPI_GetDataCount (const SPI_RESOURCES *spi) {
+  return (spi->xfer->rx_cnt);
+}
+
+
+
+
+
+
+
+
+ 
+static int32_t SPI_Control (uint32_t control, uint32_t arg, const SPI_RESOURCES *spi) {
+  uint32_t           mode, val, pclk;
+  uint32_t           cr1, cr2;
+
+  mode  = 0U;
+  val   = 0U;
+  cr1   = 0U;
+  cr2   = 0U;
+
+  if ((spi->info->state & ((uint8_t)(1U << 1))) == 0U) { return -1; }
+
+  if ((control & (0xFFUL << 0)) == (0x14UL << 0)) {
+    
+    if (spi->tx_dma != 0) {
+      
+      
+      spi->reg->CR2 &= ~((uint8_t)0x02);
+
+      
+      DMA_ChannelDisable (spi->tx_dma->instance);
+    } else {
+      
+      
+      spi->reg->CR2 &= ~((uint8_t)0x80);
+    }
+
+    
+    if (spi->rx_dma != 0) {
+      
+      
+      spi->reg->CR2 &= ~((uint8_t)0x01);
+
+      
+      DMA_ChannelDisable (spi->rx_dma->instance);
+    } else {
+      
+      
+      spi->reg->CR2 &= ~((uint8_t)0x40);
+    }
+
+    memset(spi->xfer, 0, sizeof(SPI_TRANSFER_INFO));
+    spi->info->status.busy = 0U;
+    return 0;
+  }
+
+  
+  if (spi->info->status.busy) { return -2; }
+
+  switch (control & (0xFFUL << 0)) {
+    case (0x00UL << 0):
+      mode |= (0x00UL << 0);
+      break;
+
+    case (0x01UL << 0):
+      mode |= (0x01UL << 0);
+
+      
+      cr1 |= ((uint16_t)0x0004);
+      break;
+
+    case (0x02UL << 0):
+      mode |= (0x02UL << 0);
+      break;
+
+    case (0x03UL << 0):
+      return (-6 - 1);
+
+    case (0x04UL << 0):
+      return (-6 - 1);
+
+    case (0x10UL << 0):
+      
+      pclk = spi->pclk;
+      for (val = 0U; val < 8U; val++) {
+        if (arg >= (pclk >> (val + 1U))) { break; }
+      }
+      if ((val == 8U) || (arg < (pclk >> (val + 1U)))) {
+        
+        return -1;
+      }
+      
+      spi->reg->CR1 &= ~((uint16_t)0x0040);
+      spi->reg->CR1  =  (spi->reg->CR1 & ~((uint16_t)0x0038)) | (val << 3U);
+      spi->reg->CR1 |=  ((uint16_t)0x0040);
+      return 0;
+
+    case (0x11UL << 0):
+      
+      return (spi->pclk >> (((spi->reg->CR1 & ((uint16_t)0x0038)) >> 3U) + 1U));
+
+    case (0x12UL << 0):
+      spi->xfer->def_val = (uint16_t)(arg & 0xFFFFU);
+      return 0;
+
+    case (0x13UL << 0):
+      val = (spi->info->mode & (0xFFUL << 0));
+      
+      if (val == (0x01UL << 0)) {
+        val = spi->info->mode & (3UL << 19);
+        
+        
+        if ((spi->io.nss != 0) && (val == (1UL << 19))) {
+          
+          if (arg == 0)
+            GPIO_PinWrite (spi->io.nss->port, spi->io.nss->pin, 1);
+          else
+            GPIO_PinWrite (spi->io.nss->port, spi->io.nss->pin, 0);
+        } else return -1;
+        return 0;
+      }
+      
+      else if (val == (0x02UL << 0)) {
+        val = spi->info->mode & (1UL << 21);
+        
+        if (val == (1UL << 19)) {
+          if (arg == 1) {
+            spi->reg->CR1 |= ((uint16_t)0x0100);
+          }
+          else {
+            spi->reg->CR1 &= ~((uint16_t)0x0100);
+          }
+          return 0;
+        } else { return -1; }
+      } else { return -1; }
+
+    default:
+      return -4;
+  }
+
+  
+  switch (control & (7UL << 8)) {
+    case (0UL << 8):
+      break;
+    case (1UL << 8):
+     cr1 |= ((uint16_t)0x0001);
+      break;
+    case (2UL << 8):
+      cr1 |= ((uint16_t)0x0002);
+      break;
+    case (3UL << 8):
+      cr1 |= ((uint16_t)0x0001) | ((uint16_t)0x0002);
+      break;
+    case (4UL << 8):
+    case (5UL << 8):
+    default:
+      return (-6 - 2);
+  }
+
+  
+  switch (control & (0x3FUL << 12)) {
+    case (((8U) & 0x3F) << 12):
+      break;
+    case (((16U) & 0x3F) << 12):
+      cr1 |= ((uint16_t)0x0800);
+      break;
+    default: return (-6 - 3);
+  }
+
+  
+  if ((control & (1UL << 18)) == (1UL << 18)) {
+    cr1 |= ((uint16_t)0x0080);
+  }
+
+  
+  if (mode == (0x01UL << 0)) {
+    switch (control & (3UL << 19)) {
+      case (0UL << 19):
+        if (spi->io.nss != 0) {
+          
+          GPIO_PinConfigure (spi->io.nss->port, spi->io.nss->pin, GPIO_IN_ANALOG,
+                                                                  GPIO_MODE_INPUT);
+        }
+        
+        
+        cr1 |= ((uint16_t)0x0200) | ((uint16_t)0x0100);
+        mode |= (0UL << 19);
+        break;
+
+      case (3UL << 19):
+        if (spi->io.nss) {
+          
+          GPIO_PortClock (spi->io.nss->port, 1);
+
+          GPIO_PinConfigure (spi->io.nss->port, spi->io.nss->pin, GPIO_AF_PUSHPULL,
+                                                                  GPIO_MODE_OUT50MHZ);
+        } else {
+          
+          return (-6 - 5);
+        }
+        mode |= (3UL << 19);
+        break;
+
+      case (1UL << 19):
+        if (spi->io.nss) {
+          
+          GPIO_PortClock (spi->io.nss->port, 1);
+
+          GPIO_PinConfigure (spi->io.nss->port, spi->io.nss->pin, GPIO_OUT_PUSH_PULL,
+                                                                  GPIO_MODE_OUT50MHZ);
+          
+          cr1 |= ((uint16_t)0x0200) | ((uint16_t)0x0100);
+
+          mode |= (1UL << 19);
+        } else {
+          
+          return (-6 - 5);
+        }
+        break;
+
+      case (2UL << 19):
+        if (spi->io.nss) {
+          
+          GPIO_PortClock (spi->io.nss->port, 1);
+
+          GPIO_PinConfigure (spi->io.nss->port, spi->io.nss->pin, GPIO_AF_PUSHPULL,
+                                                                  GPIO_MODE_OUT50MHZ);
+          
+          cr2 |= ((uint8_t)0x04);
+
+          mode |= (2UL << 19);
+        } else {
+          
+          return (-6 - 5);
+        }
+        break;
+        default: return (-6 - 5);
+    }
+  }
+
+  
+  if (mode ==  (0x02UL << 0)) {
+    switch (control & (1UL << 21)) {
+      case (0UL << 21):
+        if (spi->io.nss) {
+          
+          GPIO_PortClock (spi->io.nss->port, 1);
+
+          GPIO_PinConfigure (spi->io.nss->port, spi->io.nss->pin, GPIO_AF_PUSHPULL,
+                                                                  GPIO_MODE_OUT50MHZ);
+          mode |= (0UL << 21);
+        } else {
+          
+          return (-6 - 5);
+        }
+        break;
+
+      case (1UL << 21):
+        if (spi->io.nss) {
+          
+          GPIO_PinConfigure (spi->io.nss->port, spi->io.nss->pin, GPIO_IN_ANALOG,
+                                                                  GPIO_MODE_INPUT);
+        }
+        
+        cr1 |= ((uint16_t)0x0200);
+        mode |= (1UL << 21);
+        break;
+      default: return (-6 - 5);
+    }
+  }
+
+  
+  pclk = spi->pclk;
+  for (val = 0U; val < 8U; val++) {
+    if (arg >= (pclk >> (val + 1U))) break;
+  }
+  if ((val == 8U) || (arg < (pclk >> (val + 1U)))) {
+    
+    return -1;
+  }
+  
+  cr1 |= (val << 3U);
+
+  spi->info->mode = mode;
+
+  
+  spi->reg->CR1 &= ~((uint16_t)0x0040);
+  spi->reg->CR2  = cr2 | ((uint8_t)0x20);
+  spi->reg->CR1  = cr1;
+
+  if ((mode & (0xFFUL << 0)) == (0x00UL << 0)) {
+    spi->info->state &= ~((uint8_t)(1U << 2));
+  } else {
+    spi->info->state |=  ((uint8_t)(1U << 2));
+  }
+
+  
+  spi->reg->CR1 |= ((uint16_t)0x0040);
+
+  return 0;
+}
+
+
+
+
+
+
+ 
+static ARM_SPI_STATUS SPI_GetStatus (const SPI_RESOURCES *spi) {
+  ARM_SPI_STATUS status;
+
+  status.busy       = spi->info->status.busy;
+  status.data_lost  = spi->info->status.data_lost;
+  status.mode_fault = spi->info->status.mode_fault;
+
+  return status;
+}
+
+ 
+void SPI_IRQHandler (const SPI_RESOURCES *spi) {
+  uint8_t  data_8bit;
+  uint16_t data_16bit, sr;
+  uint32_t event;
+
+  
+  sr = spi->reg->SR;
+
+  event = 0U;
+
+  if ((sr & ((uint8_t)0x40)) != 0U) {
+    
+    if ((spi->reg->CR1 & ((uint16_t)0x0800)) == 0U) {
+      
+      data_8bit = *(volatile uint8_t *)(&spi->reg->DR);
+      if (spi->xfer->rx_cnt < spi->xfer->num) {
+        if (spi->xfer->rx_buf != 0) {
+          *(spi->xfer->rx_buf++) = data_8bit;
+        }
+      }
+    } else {
+      
+      data_16bit = *(volatile uint16_t *)(&spi->reg->DR);
+      if (spi->xfer->rx_cnt < spi->xfer->num) {
+        if (spi->xfer->rx_buf != 0) {
+          *(spi->xfer->rx_buf++) = (uint8_t) data_16bit;
+          *(spi->xfer->rx_buf++) = (uint8_t)(data_16bit >> 8U);
+        }
+      }
+    }
+    spi->xfer->rx_cnt++;
+    sr = spi->reg->SR;
+
+    spi->info->status.data_lost = 1U;
+    event |=(1UL << 1);
+  }
+  if ((sr & ((uint8_t)0x08)) != 0U) {
+    
+    spi->info->status.data_lost = 1U;
+    event |= (1UL << 1);
+  }
+  if ((sr & ((uint8_t)0x20)) != 0U) {
+    
+    spi->info->status.mode_fault = 1U;
+
+    
+    spi->reg->CR1 = spi->reg->CR1;
+    event |= (1UL << 2);
+  }
+
+  if (((sr & ((uint8_t)0x01)) != 0U) && ((spi->reg->CR2 & ((uint8_t)0x40)) != 0U)) {
+    
+
+    if (spi->xfer->rx_cnt < spi->xfer->num) {
+      if ((spi->reg->CR1 & ((uint16_t)0x0800)) == 0U) {
+        
+        data_8bit = *(volatile uint8_t *)(&spi->reg->DR);
+        if (spi->xfer->rx_buf != 0) {
+          *(spi->xfer->rx_buf++) = data_8bit;
+        }
+      } else {
+        
+        data_16bit = *(volatile uint16_t *)(&spi->reg->DR);
+        if (spi->xfer->rx_buf != 0) {
+          *(spi->xfer->rx_buf++) = (uint8_t) data_16bit;
+          *(spi->xfer->rx_buf++) = (uint8_t)(data_16bit >> 8U);
+        }
+      }
+
+      spi->xfer->rx_cnt++;
+
+      if (spi->xfer->rx_cnt == spi->xfer->num) {
+
+        
+        spi->reg->CR2 &= ~((uint8_t)0x40);
+
+        
+        spi->info->status.busy = 0U;
+
+        
+        event |= (1UL << 0);
+      }
+    }
+    else {
+      
+      event |= (1UL << 1);
+    }
+  }
+
+  if (((sr & ((uint8_t)0x02)) != 0U) && ((spi->reg->CR2 & ((uint8_t)0x80)) != 0U)) {
+    if (spi->xfer->tx_cnt < spi->xfer->num) {
+      if ((spi->reg->CR1 & ((uint16_t)0x0800)) == 0U) {
+        if (spi->xfer->tx_buf != 0) {
+          data_8bit = *(spi->xfer->tx_buf++);
+        } else {
+          data_8bit = (uint8_t)spi->xfer->def_val;
+        }
+        
+        *(volatile uint8_t *)(&spi->reg->DR) = data_8bit;
+      } else {
+        if (spi->xfer->tx_buf != 0) {
+          data_16bit  = *(spi->xfer->tx_buf++);
+          data_16bit |= *(spi->xfer->tx_buf++) << 8U;
+        } else {
+          data_16bit  = (uint16_t)spi->xfer->def_val;
+        }
+        
+        *(volatile uint16_t *)(&spi->reg->DR) = data_16bit;
+      }
+
+      spi->xfer->tx_cnt++;
+
+      if (spi->xfer->tx_cnt == spi->xfer->num) {
+        
+        spi->reg->CR2 &= ~((uint8_t)0x80);
+      }
+    } else {
+      
+      event |= (1UL << 1);
+    }
+  }
+
+  
+  if ((event != 0U) && ((spi->info->cb_event != 0))) {
+    spi->info->cb_event(event);
+  }
+}
+
+#line 1296 "C:\\Keil_v5\\ARM\\PACK\\Keil\\STM32F1xx_DFP\\2.3.0\\RTE_Driver\\SPI_STM32F10x.c"
+
+#line 1315 "C:\\Keil_v5\\ARM\\PACK\\Keil\\STM32F1xx_DFP\\2.3.0\\RTE_Driver\\SPI_STM32F10x.c"
+
+
+
+static int32_t        SPI1_Initialize          (ARM_SPI_SignalEvent_t pSignalEvent)                { return SPI_Initialize (pSignalEvent, &SPI1_Resources); }
+static int32_t        SPI1_Uninitialize        (void)                                              { return SPI_Uninitialize (&SPI1_Resources); }
+static int32_t        SPI1_PowerControl        (ARM_POWER_STATE state)                             { return SPI_PowerControl (state, &SPI1_Resources); }
+static int32_t        SPI1_Send                (const void *data, uint32_t num)                    { return SPI_Send (data, num, &SPI1_Resources); }
+static int32_t        SPI1_Receive             (void *data, uint32_t num)                          { return SPI_Receive (data, num, &SPI1_Resources); }
+static int32_t        SPI1_Transfer            (const void *data_out, void *data_in, uint32_t num) { return SPI_Transfer (data_out, data_in, num, &SPI1_Resources); }
+static uint32_t       SPI1_GetDataCount        (void)                                              { return SPI_GetDataCount (&SPI1_Resources); }
+static int32_t        SPI1_Control             (uint32_t control, uint32_t arg)                    { return SPI_Control (control, arg, &SPI1_Resources); }
+static ARM_SPI_STATUS SPI1_GetStatus           (void)                                              { return SPI_GetStatus (&SPI1_Resources); }
+       void           SPI1_IRQHandler          (void)                                              {        SPI_IRQHandler (&SPI1_Resources); }
+
+#line 1335 "C:\\Keil_v5\\ARM\\PACK\\Keil\\STM32F1xx_DFP\\2.3.0\\RTE_Driver\\SPI_STM32F10x.c"
+
+ARM_DRIVER_SPI Driver_SPI1 = {
+  SPIX_GetVersion,
+  SPIX_GetCapabilities,
+  SPI1_Initialize,
+  SPI1_Uninitialize,
+  SPI1_PowerControl,
+  SPI1_Send,
+  SPI1_Receive,
+  SPI1_Transfer,
+  SPI1_GetDataCount,
+  SPI1_Control,
+  SPI1_GetStatus
+};
+
+
+
+#line 1385 "C:\\Keil_v5\\ARM\\PACK\\Keil\\STM32F1xx_DFP\\2.3.0\\RTE_Driver\\SPI_STM32F10x.c"
+
+

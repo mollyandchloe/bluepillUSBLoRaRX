@@ -10768,3 +10768,896 @@ typedef struct _ARM_DRIVER_USBD {
 #line 65 "C:\\Keil_v5\\ARM\\PACK\\Keil\\STM32F1xx_DFP\\2.3.0\\RTE_Driver\\USBD_STM32F10x.c"
 
 
+
+
+
+
+#line 77 "C:\\Keil_v5\\ARM\\PACK\\Keil\\STM32F1xx_DFP\\2.3.0\\RTE_Driver\\USBD_STM32F10x.c"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+static const ARM_DRIVER_VERSION usbd_driver_version = { (((2) << 8) | (2)), (((2) << 8) | (1)) };
+
+
+static const ARM_USBD_CAPABILITIES usbd_driver_capabilities = {
+  0U,   
+  0U,   
+  0U    
+};
+
+
+
+
+typedef struct {                        
+  uint8_t  *data;
+  uint32_t  num;
+  uint32_t  num_transferred_total;
+  uint16_t  num_transferring;
+  uint16_t  max_packet_size;
+  uint8_t   active;
+} ENDPOINT_t;
+
+static ARM_USBD_SignalDeviceEvent_t   SignalDeviceEvent;
+static ARM_USBD_SignalEndpointEvent_t SignalEndpointEvent;
+
+static _Bool                hw_powered     = 0;
+static _Bool                hw_initialized = 0;
+static ARM_USBD_STATE      usbd_state;
+static uint8_t             setup_packet[8];     
+static volatile uint8_t    setup_received;      
+
+
+
+
+static EP_BUF_DSCR        *pBUF_DSCR   = (EP_BUF_DSCR *)0x40006000;
+
+static const uint16_t EP_buff_offset[16] = { 0x80U, 0x80U + 8U,
+                                             0x80U + 8U + 8U, 0x80U + 8U + 8U + 64U,
+                                             0x80U + 8U + 8U + 64U + 64U, 0x80U + 8U + 8U + 64U + 64U + 64U,
+                                             0x80U + 8U + 8U + 64U + 64U + 64U + 64U, 0x80U + 8U + 8U + 64U + 64U + 64U + 64U + 8U,
+                                             0x80U + 8U + 8U + 64U + 64U + 64U + 64U + 8U + 8U, 0x80U + 8U + 8U + 64U + 64U + 64U + 64U + 8U + 8U + 8U,
+                                             0x80U + 8U + 8U + 64U + 64U + 64U + 64U + 8U + 8U + 8U + 8U, 0x80U + 8U + 8U + 64U + 64U + 64U + 64U + 8U + 8U + 8U + 8U + 8U,
+                                             0x80U + 8U + 8U + 64U + 64U + 64U + 64U + 8U + 8U + 8U + 8U + 8U + 8U, 0x80U + 8U + 8U + 64U + 64U + 64U + 64U + 8U + 8U + 8U + 8U + 8U + 8U + 8U,
+                                             0x80U + 8U + 8U + 64U + 64U + 64U + 64U + 8U + 8U + 8U + 8U + 8U + 8U + 8U + 8U, 0x80U + 8U + 8U + 64U + 64U + 64U + 64U + 8U + 8U + 8U + 8U + 8U + 8U + 8U + 8U + 8U };
+
+
+static volatile ENDPOINT_t ep[(8U + 1U) * 2U];
+
+
+
+
+
+
+
+
+ 
+void IN_EP_Status (uint8_t ep_num, uint32_t stat) {
+  uint32_t num, val, ep_reg;
+
+  num         =  ep_num & (0x0F);
+  stat       &=  0x0030;
+  ep_reg      =  (*((volatile unsigned int *)(0x40005C00 + 4*(num))));
+  val         = (ep_reg & 0x0030) ^ stat;
+  val         = (ep_reg & ~0x0030) | val;
+  (*((volatile unsigned int *)(0x40005C00 + 4*(num)))) = (val & ((0x8000|0x0800|0x0600|0x0100|0x0080|0x000F) | 0x0030)) | 0x0080 | 0x8000;
+}
+
+
+
+
+ 
+void OUT_EP_Status (uint8_t ep_num, uint32_t stat) {
+  uint32_t num, val, ep_reg;
+
+  num         =  ep_num & (0x0F);
+  stat       &=  0x3000;
+  ep_reg      =  (*((volatile unsigned int *)(0x40005C00 + 4*(num))));
+  val         = (ep_reg & 0x3000) ^ stat;
+  val         = (ep_reg & ~0x3000) | val;
+  (*((volatile unsigned int *)(0x40005C00 + 4*(num)))) = (val & ((0x8000|0x0800|0x0600|0x0100|0x0080|0x000F) | 0x3000)) | 0x0080 | 0x8000;
+}
+
+
+
+
+
+
+
+
+ 
+static void USBD_EP_HW_Read (uint8_t ep_addr) {
+  volatile ENDPOINT_t *ptr_ep;
+  uint32_t             cnt, i;
+  __packed uint8_t    *ptr_dest_8;
+  __packed uint16_t   *ptr_dest;
+  volatile uint32_t   *ptr_src;
+  uint8_t              ep_num;
+  uint8_t              tmp_buf[4];
+
+  ptr_ep = &ep[((((ep_addr) & (0x0F)) * 2U) + (((ep_addr) >> 7) & 1U))];
+  ep_num = ((ep_addr) & (0x0F));
+
+  cnt = (pBUF_DSCR + ep_num)->COUNT_RX & 0x03FF;
+
+  
+  if (cnt          == 0U) { return; }
+
+  
+  if (ptr_ep->data == 0U) { return; }
+
+  
+  ptr_src  = (uint32_t *)(0x40006000 + 2*((pBUF_DSCR + ep_num)->ADDR_RX));
+  ptr_dest = (__packed uint16_t *)(ptr_ep->data + ptr_ep->num_transferred_total);
+
+  i = cnt / 2U;
+  while (i != 0U) {
+    *ptr_dest++ = *ptr_src++;
+    i--;
+  }
+  ptr_ep->num_transferred_total += cnt;
+
+  
+  if ((cnt & 1U) != 0U) {
+    ptr_dest_8 = (uint8_t *)(ptr_dest);
+    *((__packed uint16_t *)tmp_buf) = *ptr_src;
+    *ptr_dest_8 = tmp_buf[0];
+  }
+
+  if (cnt != ptr_ep->max_packet_size) { ptr_ep->num  = 0U;  }
+  else                                { ptr_ep->num -= cnt; }
+}
+
+
+
+
+
+
+
+ 
+static void USBD_EP_HW_Write (uint8_t ep_addr) {
+  volatile ENDPOINT_t *ptr_ep;
+  uint8_t              ep_num;
+  uint16_t             num, i;
+  volatile uint32_t   *ptr_dest;
+  __packed uint16_t   *ptr_src;
+
+  ptr_ep = &ep[((((ep_addr) & (0x0F)) * 2U) + (((ep_addr) >> 7) & 1U))];
+  ep_num = ((ep_addr) & (0x0F));
+
+  if (ptr_ep->num > ptr_ep->max_packet_size) { num = ptr_ep->max_packet_size; }
+  else                                       { num = ptr_ep->num;             }
+
+  ptr_src  = (__packed uint16_t *)(ptr_ep->data + ptr_ep->num_transferred_total);
+  ptr_dest = (uint32_t *)(0x40006000 + 2*((pBUF_DSCR + ep_num)->ADDR_TX));
+
+  ptr_ep->num_transferring  = num;
+  ptr_ep->num              -= num;
+
+  
+  i = (num + 1U) >> 1;
+  while (i != 0U) {
+    *ptr_dest++ = *ptr_src++;
+    i--;
+  }
+
+  (pBUF_DSCR + ep_num)->COUNT_TX = num;
+
+  if (((*((volatile unsigned int *)(0x40005C00 + 4*(ep_num)))) & 0x0030) != 0x0010) {
+    IN_EP_Status(ep_addr, 0x0030);     
+  }
+}
+
+
+
+
+
+ 
+static void USBD_Reset (void) {
+
+  (*((volatile unsigned int *)(0x40005C00 + 0x44))) = 0;                                 
+
+  (*((volatile unsigned int *)(0x40005C00 + 0x40))) = 0x8000 | 0x0400 | 0x0800 | 0x1000 | 0x2000 | 0x4000;
+
+
+  
+  setup_received  = 0U;
+  memset((void *)0x40006000, 0, (sizeof(EP_BUF_DSCR)*8));
+  memset((void *)&usbd_state,  0, sizeof(usbd_state));
+  memset((void *)ep,           0, sizeof(ep));
+
+  (*((volatile unsigned int *)(0x40005C00 + 0x50))) = 0x00;                        
+
+  (*((volatile unsigned int *)(0x40005C00 + 0x4C))) = 0x0080 | 0;                 
+}
+
+
+
+
+
+
+
+
+ 
+static ARM_DRIVER_VERSION USBD_GetVersion (void) { return usbd_driver_version; }
+
+
+
+
+
+ 
+static ARM_USBD_CAPABILITIES USBD_GetCapabilities (void) { return usbd_driver_capabilities; }
+
+
+
+
+
+
+
+
+ 
+static int32_t USBD_Initialize (ARM_USBD_SignalDeviceEvent_t   cb_device_event,
+                                ARM_USBD_SignalEndpointEvent_t cb_endpoint_event) {
+
+  if (hw_initialized == 1) {
+    return 0;
+  }
+
+  SignalDeviceEvent   = cb_device_event;
+  SignalEndpointEvent = cb_endpoint_event;
+
+#line 407 "C:\\Keil_v5\\ARM\\PACK\\Keil\\STM32F1xx_DFP\\2.3.0\\RTE_Driver\\USBD_STM32F10x.c"
+
+  hw_initialized = 1;
+
+  return 0;
+}
+
+
+
+
+
+ 
+static int32_t USBD_Uninitialize (void) {
+
+#line 426 "C:\\Keil_v5\\ARM\\PACK\\Keil\\STM32F1xx_DFP\\2.3.0\\RTE_Driver\\USBD_STM32F10x.c"
+
+  hw_initialized = 0;
+
+  return 0;
+}
+
+
+
+
+
+
+ 
+static int32_t USBD_PowerControl (ARM_POWER_STATE state) {
+
+  switch (state) {
+    case ARM_POWER_OFF:
+      ((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x20000) + 0x1000))->APB1ENR  |=  ((uint32_t)0x00800000);              
+      __NVIC_DisableIRQ      (USB_LP_CAN1_RX0_IRQn);      
+      __NVIC_ClearPendingIRQ (USB_LP_CAN1_RX0_IRQn);      
+
+      hw_powered     = 0;                           
+      (*((volatile unsigned int *)(0x40005C00 + 0x40))) = 0x0001 | 0x0002;                     
+
+
+
+      ((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x20000) + 0x1000))->APB1RSTR  |=  ((uint32_t)0x00800000);           
+
+                                                        
+      setup_received =  0U;
+      memset((void *)&usbd_state, 0, sizeof(usbd_state));
+      memset((void *)ep,          0, sizeof(ep));
+
+      ((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x20000) + 0x1000))->APB1ENR   &= ~((uint32_t)0x00800000);             
+
+      break;
+
+    case ARM_POWER_FULL:
+      if (hw_initialized == 0) {
+        return -1;
+      }
+      if (hw_powered     == 1) {
+        return 0;
+      }
+
+      ((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x20000) + 0x1000))->APB1ENR   |=  ((uint32_t)0x00800000);             
+      ((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x20000) + 0x1000))->APB1RSTR  |=  ((uint32_t)0x00800000);           
+      osDelay(1);                                       
+      ((RCC_TypeDef *) ((((uint32_t)0x40000000) + 0x20000) + 0x1000))->APB1RSTR  &= ~((uint32_t)0x00800000);           
+
+      USBD_Reset ();                                    
+
+      hw_powered     = 1;                            
+
+      __NVIC_EnableIRQ   (USB_LP_CAN1_RX0_IRQn);          
+      break;
+
+    default:
+      return -4;
+  }
+
+  return 0;
+}
+
+
+
+
+
+ 
+static int32_t USBD_DeviceConnect (void) {
+
+  if (hw_powered == 0) { return -1; }
+
+  
+
+
+
+
+  (*((volatile unsigned int *)(0x40005C00 + 0x40))) = 0x0001;                             
+  (*((volatile unsigned int *)(0x40005C00 + 0x40))) = 0;
+  (*((volatile unsigned int *)(0x40005C00 + 0x44))) = 0;                                     
+  (*((volatile unsigned int *)(0x40005C00 + 0x40))) = 0x0400 | 0x0800 | 0x1000; 
+
+  return 0;
+}
+
+
+
+
+
+ 
+static int32_t USBD_DeviceDisconnect (void) {
+
+  if (hw_powered == 0) { return -1; }
+
+  (*((volatile unsigned int *)(0x40005C00 + 0x40))) = 0x0001 | 0x0002;                 
+
+  
+
+
+
+
+  return 0;
+}
+
+
+
+
+
+ 
+static ARM_USBD_STATE USBD_DeviceGetState (void) {
+  return usbd_state;
+}
+
+
+
+
+
+ 
+static int32_t USBD_DeviceRemoteWakeup (void) {
+
+  if (hw_powered == 0) { return -1; }
+
+  (*((volatile unsigned int *)(0x40005C00 + 0x40))) |=   (*((volatile unsigned int *)(0x40005C00 + 0x40)));       
+  osDelay(2U);
+  (*((volatile unsigned int *)(0x40005C00 + 0x40))) &=  ~(*((volatile unsigned int *)(0x40005C00 + 0x40)));
+
+  return 0;
+}
+
+
+
+
+
+
+ 
+static int32_t USBD_DeviceSetAddress (uint8_t dev_addr) {
+
+  if (hw_powered == 0) { return -1; }
+
+  (*((volatile unsigned int *)(0x40005C00 + 0x4C))) = 0x0080 | dev_addr;
+
+  return 0;
+}
+
+
+
+
+
+
+ 
+static int32_t USBD_ReadSetupPacket (uint8_t *setup) {
+
+  if (hw_powered == 0)  { return -1; }
+  if (setup_received == 0U) { return -1; }
+
+  setup_received = 0U;
+  memcpy(setup, setup_packet, 8);
+
+  if (setup_received != 0U) {           
+    return -1;
+  }
+
+  return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+static int32_t USBD_EndpointConfigure (uint8_t  ep_addr,
+                                       uint8_t  ep_type,
+                                       uint16_t ep_max_packet_size) {
+  volatile ENDPOINT_t *ptr_ep;
+  uint8_t              ep_num;
+  uint16_t             ep_mps;
+  _Bool                 ep_dir;
+  uint32_t             ep_reg;
+
+  ep_num = ((ep_addr) & (0x0F));
+  if (ep_num > 8U) { return -1; }
+  if (hw_powered == 0)            { return -1; }
+
+  ptr_ep = &ep[((((ep_addr) & (0x0F)) * 2U) + (((ep_addr) >> 7) & 1U))];
+  if (ptr_ep->active != 0U)           { return -2; }
+
+  ep_mps =  ep_max_packet_size & (0x07FF);
+  ep_dir = (ep_addr & (0x80)) == (0x80);
+
+  
+  if ((ep_mps + EP_buff_offset[((((ep_addr) & (0x0F)) * 2U) + (((ep_addr) >> 7) & 1U))]) > EP_buff_offset[((((ep_addr) & (0x0F)) * 2U) + (((ep_addr) >> 7) & 1U)) + 1]) {
+    
+    return -1;
+  }
+
+  
+  memset((void *)(ptr_ep), 0, sizeof (ENDPOINT_t));
+
+  
+  ptr_ep->max_packet_size = ep_mps;
+
+  if (ep_dir != 0U) {                                   
+    (pBUF_DSCR + ep_num)->ADDR_TX = EP_buff_offset[((((ep_addr) & (0x0F)) * 2U) + (((ep_addr) >> 7) & 1U))];
+  } else {                                              
+    (pBUF_DSCR + ep_num)->ADDR_RX = EP_buff_offset[((((ep_addr) & (0x0F)) * 2U) + (((ep_addr) >> 7) & 1U))];
+    if (ep_mps > 62) {
+      ep_mps = (ep_mps + 31) & ~31;
+      (pBUF_DSCR + ep_num)->COUNT_RX = ((ep_mps << 5) - 1) | 0x8000;
+    } else {
+      ep_mps = (ep_mps + 1)  & ~1;
+      (pBUF_DSCR + ep_num)->COUNT_RX =   ep_mps << 9;
+    }
+  }
+
+  switch (ep_type) {
+    case (0):
+      ep_reg = 0x0200;
+      break;
+    case (1):
+      ep_reg = 0x0400;
+      break;
+    case (2):
+      ep_reg = 0x0000;
+      break;
+    case (3):
+      ep_reg = 0x0600;
+      break;
+  }
+
+  if (ep_addr == 0U) {
+    
+    (*((volatile unsigned int *)(0x40005C00 + 4*(0)))) = 0x0200 | 0x3000;
+  } else if (ep_addr != 0x80U){
+    ep_reg |= ep_num;
+    (*((volatile unsigned int *)(0x40005C00 + 4*(ep_num)))) = ep_reg;
+
+    if (ep_dir != 0U) {                                   
+      ((*((volatile unsigned int *)(0x40005C00 + 4*(((ep_num) & (0x0F)))))) = ((*((volatile unsigned int *)(0x40005C00 + 4*(((ep_num) & (0x0F)))))) & ((0x8000|0x0800|0x0600|0x0100|0x0080|0x000F) | 0x0030 | 0x0040)) | 0x0080 | 0x8000);
+      IN_EP_Status(ep_num, 0x0020);
+    } else {                                              
+      ((*((volatile unsigned int *)(0x40005C00 + 4*(((ep_num) & (0x0F)))))) = ((*((volatile unsigned int *)(0x40005C00 + 4*(((ep_num) & (0x0F)))))) & ((0x8000|0x0800|0x0600|0x0100|0x0080|0x000F) | 0x3000 | 0x4000)) | 0x0080 | 0x8000);
+      OUT_EP_Status(ep_num, 0x2000);
+    }
+  }
+
+  return 0;
+}
+
+
+
+
+
+
+
+
+ 
+static int32_t USBD_EndpointUnconfigure (uint8_t ep_addr) {
+  volatile ENDPOINT_t *ptr_ep;
+  uint8_t              ep_num;
+  _Bool                 ep_dir;
+
+  ep_num = ((ep_addr) & (0x0F));
+  if (ep_num > 8U) { return -1; }
+  if (hw_powered == 0)            { return -1; }
+
+  ptr_ep = &ep[((((ep_addr) & (0x0F)) * 2U) + (((ep_addr) >> 7) & 1U))];
+  if (ptr_ep->active != 0U)           { return -2; }
+
+  ep_dir = (ep_addr & (0x80)) == (0x80);
+
+  if (ep_dir != 0U) {                                   
+    ((*((volatile unsigned int *)(0x40005C00 + 4*(((ep_num) & (0x0F)))))) = ((*((volatile unsigned int *)(0x40005C00 + 4*(((ep_num) & (0x0F)))))) & ((0x8000|0x0800|0x0600|0x0100|0x0080|0x000F) | 0x0030 | 0x0040)) | 0x0080 | 0x8000);
+    IN_EP_Status(ep_num, 0x0000);
+  } else {                                              
+    ((*((volatile unsigned int *)(0x40005C00 + 4*(((ep_num) & (0x0F)))))) = ((*((volatile unsigned int *)(0x40005C00 + 4*(((ep_num) & (0x0F)))))) & ((0x8000|0x0800|0x0600|0x0100|0x0080|0x000F) | 0x3000 | 0x4000)) | 0x0080 | 0x8000);
+    OUT_EP_Status(ep_num, 0x0000);
+  }
+
+  
+  memset((void *)(ptr_ep), 0, sizeof (ENDPOINT_t));
+
+  return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+ 
+static int32_t USBD_EndpointStall (uint8_t ep_addr, _Bool stall) {
+  volatile ENDPOINT_t *ptr_ep;
+  uint8_t              ep_num;
+  _Bool                 ep_dir;
+
+  ep_num = ((ep_addr) & (0x0F));
+  if (ep_num > 8U) { return -1; }
+  if (hw_powered == 0)            { return -1; }
+
+  ptr_ep = &ep[((((ep_addr) & (0x0F)) * 2U) + (((ep_addr) >> 7) & 1U))];
+  if (ptr_ep->active != 0U)           { return -2; }
+
+  ep_dir = (ep_addr & (0x80)) == (0x80);
+
+  if (stall == 1) {
+    if (ep_dir != 0U) {                                   
+      IN_EP_Status(ep_num, 0x0010);                  
+    } else {                                              
+      OUT_EP_Status(ep_num, 0x1000);                 
+    }
+  } else {
+    if (ep_dir != 0U) {                                   
+      ((*((volatile unsigned int *)(0x40005C00 + 4*(((ep_num) & (0x0F)))))) = ((*((volatile unsigned int *)(0x40005C00 + 4*(((ep_num) & (0x0F)))))) & ((0x8000|0x0800|0x0600|0x0100|0x0080|0x000F) | 0x0030 | 0x0040)) | 0x0080 | 0x8000);                                
+      IN_EP_Status(ep_num, 0x0020);                    
+    } else {                                              
+      ((*((volatile unsigned int *)(0x40005C00 + 4*(((ep_num) & (0x0F)))))) = ((*((volatile unsigned int *)(0x40005C00 + 4*(((ep_num) & (0x0F)))))) & ((0x8000|0x0800|0x0600|0x0100|0x0080|0x000F) | 0x3000 | 0x4000)) | 0x0080 | 0x8000);                               
+      OUT_EP_Status(ep_num, 0x2000);                   
+    }
+  }
+
+  return 0;
+}
+
+
+
+
+
+
+
+
+
+
+ 
+static int32_t USBD_EndpointTransfer (uint8_t ep_addr, uint8_t *data, uint32_t num) {
+  volatile ENDPOINT_t *ptr_ep;
+  uint8_t              ep_num;
+  _Bool                 ep_dir;
+
+  ep_num = ((ep_addr) & (0x0F));
+  if (ep_num > 8U) { return -1; }
+  if (hw_powered == 0)            { return -1; }
+
+  ptr_ep = &ep[((((ep_addr) & (0x0F)) * 2U) + (((ep_addr) >> 7) & 1U))];
+  if (ptr_ep->active != 0U)           { return -2; }
+
+  ep_dir = (ep_addr & (0x80)) == (0x80);
+
+  ptr_ep->active = 1U;
+
+  ptr_ep->data                  = data;
+  ptr_ep->num                   = num;
+  ptr_ep->num_transferred_total = 0U;
+  ptr_ep->num_transferring      = 0U;
+
+  if (ep_dir != 0U) {                                   
+    USBD_EP_HW_Write (ep_addr);                         
+  } else {                                              
+    OUT_EP_Status(ep_num, 0x3000);                 
+  }
+
+  return 0;
+}
+
+
+
+
+
+
+
+
+ 
+static uint32_t USBD_EndpointTransferGetResult (uint8_t ep_addr) {
+
+  if (((ep_addr) & (0x0F)) > 8U) { return 0U; }
+
+  return (ep[((((ep_addr) & (0x0F)) * 2U) + (((ep_addr) >> 7) & 1U))].num_transferred_total);
+}
+
+
+
+
+
+
+
+
+ 
+static int32_t USBD_EndpointTransferAbort (uint8_t ep_addr) {
+  volatile ENDPOINT_t *ptr_ep;
+  uint8_t              ep_num;
+  _Bool                 ep_dir;
+
+  ep_num = ((ep_addr) & (0x0F));
+  if (ep_num > 8U) { return -1; }
+  if (hw_powered == 0)            { return -1; }
+
+  ep_dir = (ep_addr & (0x80)) == (0x80);
+  ptr_ep = &ep[((((ep_addr) & (0x0F)) * 2U) + (((ep_addr) >> 7) & 1U))];
+
+  ptr_ep->num    = 0U;
+
+  if (ep_dir != 0U) {                                   
+    IN_EP_Status(ep_num, 0x0020);                    
+  } else {                                              
+    OUT_EP_Status(ep_num, 0x2000);                   
+  }
+
+  ptr_ep->active = 0U;
+
+  return 0;
+}
+
+
+
+
+
+ 
+static uint16_t USBD_GetFrameNumber (void) {
+
+  if (hw_powered == 0) { return 0U; }
+
+  return ((*((volatile unsigned int *)(0x40005C00 + 0x48))) & 0x07FF);
+}
+
+
+
+
+ 
+void USB_LP_CAN1_RX0_IRQHandler (void)  {
+  __packed uint16_t   *ptr_dest;
+  volatile uint32_t   *ptr_src;
+  volatile ENDPOINT_t *ptr_ep;
+           uint32_t    istr, ep_num, val, i;
+
+  istr = (*((volatile unsigned int *)(0x40005C00 + 0x44)));
+
+
+  if (istr & 0x0400) {
+    USBD_Reset();
+    SignalDeviceEvent((1UL << 2));
+    (*((volatile unsigned int *)(0x40005C00 + 0x44))) = ~0x0400;
+  }
+
+
+  if (istr & 0x0800) {
+    (*((volatile unsigned int *)(0x40005C00 + 0x40))) |= 0x0800;
+    usbd_state.active = 0U;
+    SignalDeviceEvent((1UL << 4));
+    (*((volatile unsigned int *)(0x40005C00 + 0x44))) = ~0x0800;
+  }
+
+
+  if (istr & 0x1000) {
+    usbd_state.active = 1U;
+    (*((volatile unsigned int *)(0x40005C00 + 0x40))) &= ~0x0800;
+    SignalDeviceEvent((1UL << 5));
+    (*((volatile unsigned int *)(0x40005C00 + 0x44))) = ~0x1000;
+  }
+
+
+  if (istr & 0x4000) {
+    (*((volatile unsigned int *)(0x40005C00 + 0x44))) = ~0x4000;
+  }
+
+
+  if (istr & 0x2000) {
+    (*((volatile unsigned int *)(0x40005C00 + 0x44))) = ~0x2000;
+  }
+
+
+  if ((istr = (*((volatile unsigned int *)(0x40005C00 + 0x44)))) & 0x8000) {
+
+
+    ep_num = istr & 0x000F;
+
+    val = (*((volatile unsigned int *)(0x40005C00 + 4*(ep_num))));
+    if (val & 0x8000) {
+      ptr_ep = &ep[((((ep_num) & (0x0F)) * 2U) + (((ep_num) >> 7) & 1U))];
+      (*((volatile unsigned int *)(0x40005C00 + 4*(ep_num)))) = val & ~0x8000 & (0x8000|0x0800|0x0600|0x0100|0x0080|0x000F);
+
+
+      if (val & 0x0800) {
+        
+        ptr_src  = (uint32_t *)(0x40006000 + 2*((pBUF_DSCR)->ADDR_RX));
+        ptr_dest = (__packed uint16_t *)(setup_packet);
+        for (i = 0U; i < 4U; i++) {
+          *ptr_dest++ = *ptr_src++;
+        }
+        setup_received = 1U;
+        SignalEndpointEvent(ep_num, (1UL << 0));
+      } else {
+
+        USBD_EP_HW_Read(ep_num);
+        if (ptr_ep->num != 0U) {
+          OUT_EP_Status(ep_num, 0x3000);
+        } else {
+          ptr_ep->active = 0U;
+          SignalEndpointEvent(ep_num, (1UL << 1));
+        }
+      }
+    }
+
+
+    if (val & 0x0080) {
+      ptr_ep = &ep[((((ep_num | (0x80)) & (0x0F)) * 2U) + (((ep_num | (0x80)) >> 7) & 1U))];
+      (*((volatile unsigned int *)(0x40005C00 + 4*(ep_num)))) = val & ~0x0080 & (0x8000|0x0800|0x0600|0x0100|0x0080|0x000F);
+      ptr_ep->num_transferred_total += ptr_ep->num_transferring;
+      if (ptr_ep->num == 0U) {
+        ptr_ep->data   = 0;
+        ptr_ep->active = 0U;
+        SignalEndpointEvent(ep_num | (0x80), (1UL << 2));
+      } else {
+        USBD_EP_HW_Write(ep_num | (0x80));
+      }
+    }
+  }
+}
+
+ARM_DRIVER_USBD Driver_USBD0 = {
+  USBD_GetVersion,
+  USBD_GetCapabilities,
+  USBD_Initialize,
+  USBD_Uninitialize,
+  USBD_PowerControl,
+  USBD_DeviceConnect,
+  USBD_DeviceDisconnect,
+  USBD_DeviceGetState,
+  USBD_DeviceRemoteWakeup,
+  USBD_DeviceSetAddress,
+  USBD_ReadSetupPacket,
+  USBD_EndpointConfigure,
+  USBD_EndpointUnconfigure,
+  USBD_EndpointStall,
+  USBD_EndpointTransfer,
+  USBD_EndpointTransferGetResult,
+  USBD_EndpointTransferAbort,
+  USBD_GetFrameNumber
+};

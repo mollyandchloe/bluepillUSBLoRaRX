@@ -1220,35 +1220,35 @@ N//   <o>Number of concurrent running user threads <1-250>
 N//   <i> Defines max. number of user threads that will run at the same time.
 N//   <i> Default: 6
 N#ifndef OS_TASKCNT
-N #define OS_TASKCNT     6
+N #define OS_TASKCNT     8
 N#endif
 N 
 N//   <o>Default Thread stack size [bytes] <64-4096:8><#/4>
 N//   <i> Defines default stack size for threads with osThreadDef stacksz = 0
 N//   <i> Default: 200
 N#ifndef OS_STKSIZE
-N #define OS_STKSIZE     50      // this stack size value is in words
+N #define OS_STKSIZE     250      // this stack size value is in words
 N#endif
 N 
 N//   <o>Main Thread stack size [bytes] <64-32768:8><#/4>
 N//   <i> Defines stack size for main thread.
 N//   <i> Default: 200
 N#ifndef OS_MAINSTKSIZE
-N #define OS_MAINSTKSIZE 50      // this stack size value is in words
+N #define OS_MAINSTKSIZE 250      // this stack size value is in words
 N#endif
 N 
 N//   <o>Number of threads with user-provided stack size <0-250>
 N//   <i> Defines the number of threads with user-provided stack size.
 N//   <i> Default: 0
 N#ifndef OS_PRIVCNT
-N #define OS_PRIVCNT     0
+N #define OS_PRIVCNT     3
 N#endif
 N 
 N//   <o>Total stack size [bytes] for threads with user-provided stack size <0-1048576:8><#/4>
 N//   <i> Defines the combined stack size for threads with user-provided stack size.
 N//   <i> Default: 0
 N#ifndef OS_PRIVSTKSIZE
-N #define OS_PRIVSTKSIZE 0       // this stack size value is in words
+N #define OS_PRIVSTKSIZE 512       // this stack size value is in words
 N#endif
 N 
 N//   <q>Stack overflow checking
@@ -1289,7 +1289,7 @@ N//   <i> Defines the input frequency of the RTOS Kernel Timer.
 N//   <i> When the Cortex-M SysTick timer is used, the input clock 
 N//   <i> is on most systems identical with the core clock.
 N#ifndef OS_CLOCK
-N #define OS_CLOCK       12000000
+N #define OS_CLOCK       72000000
 N#endif
 N 
 N//   <o>RTX Timer tick interval value [us] <1-1000000>
@@ -1317,7 +1317,7 @@ N//   <o>Round-Robin Timeout [ticks] <1-1000>
 N//   <i> Defines how long a thread will execute before a thread switch.
 N//   <i> Default: 5
 N#ifndef OS_ROBINTOUT
-N #define OS_ROBINTOUT   5
+N #define OS_ROBINTOUT   20
 N#endif
 N 
 N// </e>
@@ -1602,12 +1602,12 @@ N *      Global Variables
 N *---------------------------------------------------------------------------*/
 N
 N#if (OS_TASKCNT == 0)
-X#if (6 == 0)
+X#if (8 == 0)
 S#error "Invalid number of concurrent running threads!"
 N#endif
 N
 N#if (OS_PRIVCNT >= OS_TASKCNT)
-X#if (0 >= 6)
+X#if (3 >= 8)
 S#error "Too many threads with user-provided stack size!"
 N#endif
 N
@@ -1633,19 +1633,19 @@ Nextern uint32_t const os_trv;
 Nextern uint8_t  const os_flags;
 N
 Nuint16_t const os_maxtaskrun = OS_TASK_CNT;
-Xuint16_t const os_maxtaskrun = (6 + 1);
+Xuint16_t const os_maxtaskrun = (8 + 1);
 Nuint32_t const os_stackinfo  = (OS_STKINIT<<28) | (OS_STKCHECK<<24) | (OS_PRIV_CNT<<16) | (OS_STKSIZE*4);
-Xuint32_t const os_stackinfo  = (0<<28) | (1<<24) | ((0 + 2)<<16) | (50*4);
+Xuint32_t const os_stackinfo  = (0<<28) | (1<<24) | ((3 + 2)<<16) | (250*4);
 Nuint32_t const os_rrobin     = (OS_ROBIN << 16) | OS_ROBINTOUT;
-Xuint32_t const os_rrobin     = (1 << 16) | 5;
+Xuint32_t const os_rrobin     = (1 << 16) | 20;
 Nuint32_t const os_tickfreq   = OS_CLOCK;
-Xuint32_t const os_tickfreq   = 12000000;
+Xuint32_t const os_tickfreq   = 72000000;
 Nuint16_t const os_tickus_i   = OS_CLOCK/1000000;
-Xuint16_t const os_tickus_i   = 12000000/1000000;
+Xuint16_t const os_tickus_i   = 72000000/1000000;
 Nuint16_t const os_tickus_f   = (((uint64_t)(OS_CLOCK-1000000*(OS_CLOCK/1000000)))<<16)/1000000;
-Xuint16_t const os_tickus_f   = (((uint64_t)(12000000-1000000*(12000000/1000000)))<<16)/1000000;
+Xuint16_t const os_tickus_f   = (((uint64_t)(72000000-1000000*(72000000/1000000)))<<16)/1000000;
 Nuint32_t const os_trv        = OS_TRV;
-Xuint32_t const os_trv        = ((uint32_t)(((double)12000000*(double)1000)/1E6)-1);
+Xuint32_t const os_trv        = ((uint32_t)(((double)72000000*(double)1000)/1E6)-1);
 Nuint8_t  const os_flags      = OS_RUNPRIV;
 Xuint8_t  const os_flags      = 1;
 N
@@ -1667,7 +1667,7 @@ N/* Memory pool for TCB allocation    */
 Nextern
 Nuint32_t       mp_tcb[];
 N_declare_box  (mp_tcb, OS_TCB_SIZE, OS_TASK_CNT);
-Xuint32_t mp_tcb[(((52)+3)/4)*((6 + 1)) + 3];
+Xuint32_t mp_tcb[(((52)+3)/4)*((8 + 1)) + 3];
 Nextern
 Nuint16_t const mp_tcb_size;
 Nuint16_t const mp_tcb_size = sizeof(mp_tcb);
@@ -1676,7 +1676,7 @@ N/* Memory pool for System stack allocation (+os_idle_demon). */
 Nextern
 Nuint64_t       mp_stk[];
 N_declare_box8 (mp_stk, OS_STKSIZE*4, OS_TASK_CNT-OS_PRIV_CNT+1);
-Xuint64_t mp_stk[(((50*4)+7)/8)*((6 + 1)-(0 + 2)+1) + 2];
+Xuint64_t mp_stk[(((250*4)+7)/8)*((8 + 1)-(3 + 2)+1) + 2];
 Nextern
 Nuint32_t const mp_stk_size;
 Nuint32_t const mp_stk_size = sizeof(mp_stk);
@@ -1685,7 +1685,7 @@ N/* Memory pool for user specified stack allocation (+main, +timer) */
 Nextern
 Nuint64_t       os_stack_mem[];
 Nuint64_t       os_stack_mem[2+OS_PRIV_CNT+(OS_STACK_SZ/8)];
-Xuint64_t       os_stack_mem[2+(0 + 2)+((4*(0+50+50))/8)];
+Xuint64_t       os_stack_mem[2+(3 + 2)+((4*(512+250+50))/8)];
 Nextern
 Nuint32_t const os_stack_sz;
 Nuint32_t const os_stack_sz = sizeof(os_stack_mem);
@@ -1708,7 +1708,7 @@ N/* An array of Active task pointers. */
 Nextern
 Nvoid *os_active_TCB[];
 Nvoid *os_active_TCB[OS_TASK_CNT];
-Xvoid *os_active_TCB[(6 + 1)];
+Xvoid *os_active_TCB[(8 + 1)];
 N
 N/* User Timers Resources */
 N#if (OS_TIMERS != 0)
@@ -1760,7 +1760,7 @@ N      !defined(__MICROLIB))
 X#if (( 1L                                          ||       (1L && (5060422 >= 6010050))) &&       !0L)
 N/* A memory space for arm standard library. */
 Nstatic uint32_t std_libspace[OS_TASK_CNT][96/4];
-Xstatic uint32_t std_libspace[(6 + 1)][96/4];
+Xstatic uint32_t std_libspace[(8 + 1)][96/4];
 Nstatic OS_MUT   std_libmutex[OS_MUTEXCNT];
 Xstatic OS_MUT   std_libmutex[8];
 Nstatic uint32_t nr_mutex;
@@ -1931,7 +1931,7 @@ Nextern int main (void);
 Nextern
 Nconst osThreadDef_t os_thread_def_main;
 Nconst osThreadDef_t os_thread_def_main = {(os_pthread)main, osPriorityNormal, 1U, 4*OS_MAINSTKSIZE };
-Xconst osThreadDef_t os_thread_def_main = {(os_pthread)main, osPriorityNormal, 1U, 4*50 };
+Xconst osThreadDef_t os_thread_def_main = {(os_pthread)main, osPriorityNormal, 1U, 4*250 };
 N
 N
 N#if defined (__CC_ARM)
